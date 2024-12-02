@@ -208,6 +208,7 @@
             justify-content: space-between; /* Ensure the button is at the bottom */
             position: relative;
             transition: all 0.3s ease;
+            overflow-y: auto; /* Allow cart to scroll when it overflows */
         }
 
         .cart-header {
@@ -259,6 +260,12 @@
 
         .cart-item .increase:hover, .cart-item .decrease:hover {
             background-color: #3e6623;
+        }
+
+        .cart-item-details {
+            font-size: 16px;
+            color: #757575; /* Light grey color for sides and comments */
+            margin-top: 5px;
         }
 
         .order-btn {
@@ -443,6 +450,88 @@
         .add-to-cart-button:hover {
             background-color: #3e6623;
         }
+
+        /* Confirm Order Modal */
+        .confirm-order-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black with transparency */
+        }
+
+        .confirm-order-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%; /* Adjust modal size */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .confirm-order-header {
+            font-size: 24px;
+            font-weight: bold;
+            grid-column: span 2;
+        }
+
+        .confirm-order-items {
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #1a2b18;
+            color: #fff;
+        }
+
+        .confirm-total {
+            background-color: #1a2b18;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .confirm-total p {
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .confirm-btn {
+            background-color: #00c800;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 10px;
+            align-self: center;
+        }
+
+        .confirm-btn:hover {
+            background-color: #00a800;
+        }
+
+        .order-comments-section {
+            margin-bottom: 20px;
+        }
+
+        .order-comments-section textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            resize: none;
+        }
     </style>
 </head>
 <body>
@@ -492,7 +581,7 @@
             <span>Total:</span>
             <span id="total-price">$0.00</span>
         </div>
-        <button class="order-btn">ORDER</button>
+        <button class="order-btn" id="order-button">ORDER</button>
     </div>
 
     <!-- Modal -->
@@ -527,6 +616,23 @@
                 <!-- Add to Cart Button -->
                 <button id="add-to-cart-modal" class="add-to-cart-button">Add to Cart</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Confirm Order Modal -->
+    <div id="confirm-order-modal" class="confirm-order-modal">
+        <div class="confirm-order-content">
+            <h2 class="confirm-order-header">CONFIRM ORDER</h2>
+            <div id="confirm-order-items" class="confirm-order-items"></div>
+            <div class="order-comments-section">
+                <textarea id="order-comments" placeholder="Comments..."></textarea>
+            </div>
+            <div class="confirm-total">
+                <p>Subtotal: <span id="confirm-subtotal"></span></p>
+                <p>Tax: <span id="confirm-tax"></span></p>
+                <p>Total: <span id="confirm-total"></span></p>
+            </div>
+            <button class="confirm-btn" id="confirm-order-button">CONFIRM ORDER</button>
         </div>
     </div>
 
@@ -588,15 +694,16 @@
             tagsContainer.innerHTML = item.tags.map(tag => `<span class='food-tag'>${tag}</span>`).join('');
             document.getElementById("food-modal").style.display = "block";
 
-            document.querySelector('input[name="sides"]').checked = true;
-            document.getElementById("comments").value = "";
-
             document.getElementById("add-to-cart-modal").onclick = () => {
                 const selectedSide = document.querySelector('input[name="sides"]:checked').value;
                 const comments = document.getElementById("comments").value;
                 addToCart(item, selectedSide, comments);
                 closeModal();
             };
+
+            // Reset comments and sides selection when opening modal
+            document.getElementById("comments").value = "";
+            document.querySelector('input[name="sides"][value="Fries"]').checked = true;
 
             // Close modal without adding to cart
             document.querySelector('.close').onclick = () => closeModal();
@@ -669,6 +776,47 @@
                 updateCart();
             }
         });
+
+        // Order Button Event Listener
+        document.getElementById("order-button").addEventListener("click", () => {
+            openConfirmOrderModal();
+        });
+
+        // Confirm Order Modal functions
+        function openConfirmOrderModal() {
+            const confirmOrderItemsContainer = document.getElementById("confirm-order-items");
+            confirmOrderItemsContainer.innerHTML = cart.map(item => `
+                <div class="confirm-order-item">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    <div class="confirm-order-details">
+                        <p>Side: ${item.side}</p>
+                        ${item.comments ? `<p>Comments: ${item.comments}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+            const tax = subtotal * 0.1; // Assuming 10% tax
+            const total = subtotal + tax;
+
+            document.getElementById("confirm-subtotal").textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById("confirm-tax").textContent = `$${tax.toFixed(2)}`;
+            document.getElementById("confirm-total").textContent = `$${total.toFixed(2)}`;
+
+            document.getElementById("confirm-order-modal").style.display = "block";
+        }
+
+        document.getElementById("confirm-order-button").addEventListener("click", () => {
+            alert("Order confirmed! Thank you.");
+            cart = [];
+            updateCart();
+            closeConfirmOrderModal();
+        });
+
+        function closeConfirmOrderModal() {
+            document.getElementById("confirm-order-modal").style.display = "none";
+        }
 
         // Tab selection functionality
         document.querySelectorAll('.menu-tab').forEach(tab => {
