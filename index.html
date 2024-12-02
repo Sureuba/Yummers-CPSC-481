@@ -639,25 +639,37 @@
     <script>
         const menuData = {
             appetizers: [
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"] },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [] }
+                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
+                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
+                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" }
             ],
             mains: [
-                { name: "Gold Burger", price: 17.99, description: "A heavy burger with gold foil and wedges on the side.", tags: ["Contains Nuts"] },
-                { name: "Fish Tacos", price: 16.99, description: "Crispy fish tacos with slaw, pico de gallo, and chipotle sauce.", tags: ["Contains Nuts"] }
+                { name: "Gold Burger", price: 17.99, description: "A heavy burger with gold foil and wedges on the side.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Fish Tacos", price: 16.99, description: "Crispy fish tacos with slaw, pico de gallo, and chipotle sauce.", tags: ["Contains Nuts"], image: "assets/image.png" }
             ],
             soups: [
-                { name: "Minestrone Soup", price: 9.99, description: "Classic minestrone with vegetables and beans.", tags: [] }
+                { name: "Minestrone Soup", price: 9.99, description: "Classic minestrone with vegetables and beans.", tags: [], image: "assets/image.png" }
             ],
             handhelds: [
-                { name: "Mozzarella Panini", price: 16.99, description: "Mozzarella and tomato panini with fresh basil and olive oil.", tags: ["Vegetarian"] },
-                { name: "Beyond Burger", price: 19.99, description: "Gourmet Beyond Burger topped with vegan cheddar, caramelized onions on a toasted brioche bun.", tags: ["Vegetarian", "Contains Nuts"] }
+                { name: "Mozzarella Panini", price: 16.99, description: "Mozzarella and tomato panini with fresh basil and olive oil.<br><br>", tags: ["Vegetarian"], image: "assets/image.png" },
+                { name: "Beyond Burger", price: 19.99, description: "Gourmet Beyond Burger topped with vegan cheddar, caramelized onions on a toasted brioche bun.", tags: ["Vegetarian", "Contains Nuts"], image: "assets/image.png" }
             ],
             desserts: [
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [] }
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" }
             ],
             drinks: [
-                { name: "Lemonade", price: 3.99, description: "Freshly squeezed lemonade.", tags: [] }
+                { name: "Lemonade0", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade2", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade3", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade4", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade5", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade6", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" }
             ]
         };
 
@@ -670,7 +682,7 @@
                 const itemElement = document.createElement("div");
                 itemElement.classList.add("menu-item");
                 itemElement.innerHTML = `
-                    <img src="images/image.png" alt="${item.name}" class="item-img">
+                     <img src="${item.image}" alt="${item.name}" class="item-img">
                     <h3 class="item-title">${item.name}</h3>
                     <p class="item-desc">${item.description}</p>
                     <div class="price-and-tags">
@@ -685,7 +697,7 @@
 
         // Modal functions
         function openModal(item) {
-            document.getElementById("modal-image").src = "images/image.png";
+            document.getElementById("modal-image").src = item.image;
             document.getElementById("modal-title").textContent = item.name;
             document.getElementById("modal-desc").textContent = item.description;
             document.getElementById("modal-price").textContent = `$${item.price.toFixed(2)}`;
