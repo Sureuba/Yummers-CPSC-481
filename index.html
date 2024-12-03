@@ -280,6 +280,11 @@
             margin-top: 15px;
         }
 
+        .order-btn:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
         .cart-item .remove-btn {
             background-color: #ff4d4d;
             color: #fff;
@@ -338,16 +343,25 @@
             margin-top: 10px;
         }
 
+        .tag-icon {
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Ensures the image remains square */
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image scales properly within the circle */
+}
+
         .food-tag {
-            background-color: #294412;
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 4px;
-            text-align: center;
-            margin-top: 5px;
-        }
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        } 
+
+        .food-tag img {
+    width: 30px; /* Adjust size as needed */
+    height: 30px; /* Ensures the image remains square */
+    border-radius: 50%; /* Makes the image circular */
+    object-fit: cover; /* Ensures the image scales properly within the circle */
+}
 
         .food-modal-details {
             flex: 2;
@@ -468,29 +482,33 @@
             margin: 5% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 60%; /* Adjust modal size */
+            width: 40%; /* Adjust modal size */
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            display: grid;
-            grid-template-columns: 2fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
         .confirm-order-header {
             font-size: 24px;
             font-weight: bold;
-            grid-column: span 2;
+            text-align: center;
         }
 
         .confirm-order-items {
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
             border-radius: 8px;
             padding: 20px;
-            background-color: #1a2b18;
-            color: #fff;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .confirm-total {
-            background-color: #1a2b18;
-            color: #fff;
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
             padding: 20px;
             border-radius: 8px;
         }
@@ -520,17 +538,57 @@
         }
 
         .order-comments-section {
-            margin-bottom: 20px;
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
+            padding: 10px;
+            border-radius: 8px;
         }
 
         .order-comments-section textarea {
             width: 100%;
-            height: 100px;
+            height: 80px;
             padding: 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 16px;
             resize: none;
+        }
+
+        /* Order History Modal */
+        .order-history-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black with transparency */
+        }
+
+        .order-history-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .order-history-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .order-history-item {
+            border: 1px solid #1a2b18;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -538,12 +596,12 @@
     <!-- Top Navigation -->
     <div class="top-nav">
         <div class="nav-left">
-            <button class="nav-btn">History</button>
+            <button class="nav-btn" id="history-button">History</button>
             <button class="nav-btn">Help</button>
         </div>
         <div class="nav-right">
             <button class="nav-btn">
-                <img src="images/language_icon.png" alt="Language Icon" class="language-icon">
+                <img src="assets/language_icon.png" alt="Language Icon" class="language-icon">
                 Language
             </button>
             <button class="nav-btn">Request Bill</button>
@@ -581,7 +639,7 @@
             <span>Total:</span>
             <span id="total-price">$0.00</span>
         </div>
-        <button class="order-btn" id="order-button">ORDER</button>
+        <button class="order-btn" id="order-button" disabled>ORDER</button>
     </div>
 
     <!-- Modal -->
@@ -590,7 +648,14 @@
             <span class="close">&times;</span>
             <div class="food-modal-image-container">
                 <img id="modal-image" src="" alt="" class="food-photo">
-                <div id="modal-tags" class="food-tags-container"></div>
+                <div id="modal-tags" class="food-tags-container">
+                    ${item.tags.map(tag => `
+                        <div class="food-tag">
+                            <img src="${tag.icon}" alt="${tag.text}" class="tag-icon">
+                            <span>${tag.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
                 <!-- Comments Section -->
                 <div class="comments-section">
                     <label for="comments">Substitutions/Comments:</label>
@@ -636,90 +701,511 @@
         </div>
     </div>
 
+    <!-- Order History Modal -->
+    <div id="order-history-modal" class="order-history-modal">
+        <div class="order-history-content">
+            <h2 class="order-history-header">Order History</h2>
+            <div id="order-history-items"></div>
+        </div>
+    </div>
+
     <script>
         const menuData = {
-            appetizers: [
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" }
+    appetizers: [
+        {
+            name: "Chicken Wings",
+            price: 12.99,
+            description: "Juicy chicken wings served with your choice of sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            mains: [
-                { name: "Gold Burger", price: 17.99, description: "A heavy burger with gold foil and wedges on the side.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Fish Tacos", price: 16.99, description: "Crispy fish tacos with slaw, pico de gallo, and chipotle sauce.", tags: ["Contains Nuts"], image: "assets/image.png" }
+            image: "assets/chicken_wings.png"
+        },
+        {
+            name: "Bruschetta",
+            price: 8.99,
+            description: "Grilled bread topped with tomato, basil, and garlic.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            soups: [
-                { name: "Minestrone Soup", price: 9.99, description: "Classic minestrone with vegetables and beans.", tags: [], image: "assets/image.png" }
+            image: "assets/bruschetta.png"
+        },
+        {
+            name: "Stuffed Mushrooms",
+            price: 9.99,
+            description: "Mushrooms filled with a cheesy garlic herb stuffing.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            handhelds: [
-                { name: "Mozzarella Panini", price: 16.99, description: "Mozzarella and tomato panini with fresh basil and olive oil.<br><br>", tags: ["Vegetarian"], image: "assets/image.png" },
-                { name: "Beyond Burger", price: 19.99, description: "Gourmet Beyond Burger topped with vegan cheddar, caramelized onions on a toasted brioche bun.", tags: ["Vegetarian", "Contains Nuts"], image: "assets/image.png" }
+            image: "assets/stuffed_mushrooms.png"
+        },
+        {
+            name: "Garlic Bread",
+            price: 6.99,
+            description: "Toasted baguette with garlic butter and herbs.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            desserts: [
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" }
+            image: "assets/garlic_bread.png"
+        },
+        {
+            name: "Spinach Dip",
+            price: 10.99,
+            description: "Creamy spinach dip served with tortilla chips.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            drinks: [
-                { name: "Lemonade0", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade2", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade3", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade4", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade5", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade6", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" }
-            ]
-        };
+            image: "assets/spinach_dip.png"
+        },
+        {
+            name: "Calamari",
+            price: 13.99,
+            description: "Crispy calamari rings with marinara sauce.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/calamari.png"
+        },
+        {
+            name: "Nachos",
+            price: 11.99,
+            description: "Loaded nachos with cheese, jalapeños, and salsa.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/nachos.png"
+        },
+        {
+            name: "Shrimp Cocktail",
+            price: 14.99,
+            description: "Chilled shrimp served with tangy cocktail sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/shellfish_free.png", text: "Shellfish Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/shrimp_cocktail.png"
+        },
+        {
+            name: "Caprese Salad",
+            price: 9.99,
+            description: "Tomatoes, mozzarella, basil, and olive oil.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/caprese_salad.png"
+        }
+    ],
+    mains: [
+        {
+            name: "Steak and Fries",
+            price: 24.99,
+            description: "Grilled steak cooked to your liking with crispy fries.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/steak_fries.png"
+        },
+        {
+            name: "Grilled Salmon",
+            price: 21.99,
+            description: "Freshly grilled salmon served with steamed vegetables.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/grilled_salmon.png"
+        },
+        {
+            name: "Spaghetti Carbonara",
+            price: 18.99,
+            description: "Classic Italian pasta with creamy sauce and pancetta.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/spaghetti_carbonara.png"
+        },
+        {
+            name: "BBQ Ribs",
+            price: 25.99,
+            description: "Tender ribs glazed with house-made BBQ sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/bbq_ribs.png"
+        },
+        {
+            name: "Chicken Alfredo",
+            price: 19.99,
+            description: "Fettuccine pasta in creamy Alfredo sauce with grilled chicken.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/chicken_alfredo.png"
+        },
+        {
+            name: "Vegetable Stir-Fry",
+            price: 17.99,
+            description: "Stir-fried seasonal vegetables with soy-ginger sauce.",
+            tags: [
+                { icon: "assets/vegan.png", text: "Vegan" },
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/vegetable_stirfry.png"
+        },
+        {
+            name: "Lamb Chops",
+            price: 26.99,
+            description: "Grilled lamb chops with mint sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/lamb_chops.png"
+        },
+        {
+            name: "Beef Tacos",
+            price: 18.99,
+            description: "Spiced beef tacos with fresh toppings.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/beef_tacos.png"
+        },
+        {
+            name: "Margherita Pizza",
+            price: 15.99,
+            description: "Classic pizza with tomato, mozzarella, and basil.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/margherita_pizza.png"
+        },
+        {
+            name: "Chicken Parmigiana",
+            price: 22.99,
+            description: "Crispy chicken cutlet with marinara and melted cheese.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/chicken_parmigiana.png"
+        },
+        {
+            name: "Seafood Paella",
+            price: 27.99,
+            description: "Traditional Spanish rice dish with seafood.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/seafood_paella.png"
+        },
+        {
+            name: "Stuffed Bell Peppers",
+            price: 16.99,
+            description: "Bell peppers stuffed with rice, vegetables, and cheese.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/stuffed_bell_peppers.png"
+        }
+    ],
+    soups: [
+        {
+            name: "Tomato Basil Soup",
+            price: 7.99,
+            description: "Creamy tomato soup with a hint of basil.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/tomato_basil_soup.png"
+        },
+        {
+            name: "Chicken Noodle Soup",
+            price: 8.99,
+            description: "Hearty soup with chicken, noodles, and vegetables.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/chicken_noodle_soup.png"
+        },
+
+                {
+            name: "Clam Chowder",
+            price: 9.99,
+            description: "Rich and creamy soup with clams and potatoes.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/clam_chowder.png"
+        },
+        {
+            name: "French Onion Soup",
+            price: 8.99,
+            description: "Caramelized onions in a savory broth topped with melted cheese.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/french_onion_soup.png"
+        },
+        {
+            name: "Miso Soup",
+            price: 6.99,
+            description: "Traditional Japanese soup with tofu, seaweed, and scallions.",
+            tags: [
+                { icon: "assets/vegan.png", text: "Vegan" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/miso_soup.png"
+        },
+        {
+            name: "Lentil Soup",
+            price: 7.99,
+            description: "Hearty and flavorful soup made with lentils and spices.",
+            tags: [
+                { icon: "assets/vegan.png", text: "Vegan" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" }
+            ],
+            image: "assets/lentil_soup.png"
+        },
+        {
+            name: "Butternut Squash Soup",
+            price: 8.99,
+            description: "Creamy soup made with roasted butternut squash.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/butternut_squash_soup.png"
+        }
+    ],
+
+    handhelds: [
+        {
+            name: "Club Sandwich",
+            price: 14.99,
+            description: "Triple-layered sandwich with turkey, bacon, lettuce, and tomato.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/club_sandwich.png"
+        },
+        {
+            name: "Veggie Wrap",
+            price: 13.99,
+            description: "Whole wheat wrap filled with fresh veggies and hummus.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/vegan.png", text: "Vegan" }
+            ],
+            image: "assets/veggie_wrap.png"
+        },
+        {
+            name: "Pulled Pork Sandwich",
+            price: 15.99,
+            description: "Slow-cooked pulled pork with BBQ sauce on a brioche bun.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/pulled_pork_sandwich.png"
+        },
+        {
+            name: "Grilled Cheese",
+            price: 10.99,
+            description: "Classic grilled cheese sandwich with melted cheddar.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/grilled_cheese.png"
+        },
+        {
+            name: "BLT Sandwich",
+            price: 12.99,
+            description: "Crispy bacon, lettuce, and tomato on toasted bread.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/blt_sandwich.png"
+        },
+        {
+            name: "Falafel Wrap",
+            price: 14.99,
+            description: "Pita wrap with falafel, tahini sauce, and fresh veggies.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/vegan.png", text: "Vegan" }
+            ],
+            image: "assets/falafel_wrap.png"
+        },
+        {
+            name: "Turkey Panini",
+            price: 15.99,
+            description: "Panini with turkey, Swiss cheese, and cranberry sauce.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/turkey_panini.png"
+        },
+        {
+            name: "Cheeseburger",
+            price: 16.99,
+            description: "Classic cheeseburger with lettuce, tomato, and pickles.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/cheeseburger.png"
+        },
+        {
+            name: "BBQ Chicken Sandwich",
+            price: 14.99,
+            description: "Grilled chicken with BBQ sauce and coleslaw.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/bbq_chicken_sandwich.png"
+        },
+        {
+            name: "Philly Cheesesteak",
+            price: 17.99,
+            description: "Thinly sliced steak with melted cheese and sautéed onions.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/philly_cheesesteak.png"
+        }
+    ],
+
+    desserts: [
+        {
+            name: "Cheesecake",
+            price: 9.99,
+            description: "Creamy cheesecake with a graham cracker crust.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/cheesecake.png"
+        },
+        {
+            name: "Ice Cream Sundae",
+            price: 7.99,
+            description: "Vanilla ice cream topped with chocolate sauce and whipped cream.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/ice_cream_sundae.png"
+        },
+        {
+            name: "Fruit Tart",
+            price: 8.99,
+            description: "Fresh fruit tart with a flaky pastry crust.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" }
+            ],
+            image: "assets/fruit_tart.png"
+        },
+        {
+            name: "Brownie",
+            price: 6.99,
+            description: "Rich and fudgy chocolate brownie.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/brownie.png"
+        }
+    ],
+
+    drinks: [
+        { name: "Coke", price: 2.99, description: "Classic Coca-Cola.", tags: [], image: "assets/coke.png" },
+        { name: "Diet Coke", price: 2.99, description: "Sugar-free Coca-Cola.", tags: [], image: "assets/diet_coke.png" },
+        { name: "Sprite", price: 2.99, description: "Lemon-lime soda.", tags: [], image: "assets/sprite.png" },
+        { name: "Ginger Ale", price: 2.99, description: "Refreshing ginger-flavored soda.", tags: [], image: "assets/gingerale.png" },
+        { name: "Lemonade", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+        { name: "Iced Tea", price: 3.99, description: "Chilled black tea with a hint of lemon.", tags: [], image: "assets/ice_tea.png" }
+    ]
+};
+
+        let orderHistory = [];
 
         // Update menu items dynamically
         function updateMenu(tab) {
-            const menuGrid = document.getElementById("menu-grid");
-            menuGrid.innerHTML = '';
+    const menuGrid = document.getElementById("menu-grid");
+    menuGrid.innerHTML = '';
 
-            menuData[tab].forEach(item => {
-                const itemElement = document.createElement("div");
-                itemElement.classList.add("menu-item");
-                itemElement.innerHTML = `
-                     <img src="${item.image}" alt="${item.name}" class="item-img">
-                    <h3 class="item-title">${item.name}</h3>
-                    <p class="item-desc">${item.description}</p>
-                    <div class="price-and-tags">
-                        <p class="price">$${item.price}</p>
-                        <div class="tags">${item.tags.map(tag => `<span class="tag">${tag === 'Contains Nuts' ? 'N' : tag === 'Vegetarian' ? 'V' : tag}</span>`).join('')}</div>
-                    </div>
-                `;
-                itemElement.onclick = () => openModal(item);
-                menuGrid.appendChild(itemElement);
-            });
-        }
+    menuData[tab].forEach(item => {
+        const itemElement = document.createElement("div");
+        itemElement.classList.add("menu-item");
+        itemElement.innerHTML = `
+            <img src="${item.image}" alt="${item.name}" class="item-img">
+            <h3 class="item-title">${item.name}</h3>
+            <p class="item-desc">${item.description}</p>
+            <div class="price-and-tags">
+                <p class="price">$${item.price}</p>
+                <div class="tags">
+                    ${item.tags.map(tag => `<img src="${tag.icon}" alt="${tag.text}" class="tag-icon">`).join('')}
+                </div>
+            </div>
+        `;
+        itemElement.onclick = () => openModal(item);
+        menuGrid.appendChild(itemElement);
+    });
+}
 
         // Modal functions
         function openModal(item) {
-            document.getElementById("modal-image").src = item.image;
-            document.getElementById("modal-title").textContent = item.name;
-            document.getElementById("modal-desc").textContent = item.description;
-            document.getElementById("modal-price").textContent = `$${item.price.toFixed(2)}`;
-            const tagsContainer = document.getElementById("modal-tags");
-            tagsContainer.style.display = item.tags.length > 0 ? "flex" : "none";
-            tagsContainer.innerHTML = item.tags.map(tag => `<span class='food-tag'>${tag}</span>`).join('');
-            document.getElementById("food-modal").style.display = "block";
+    // Set modal image, title, description, and price
+    document.getElementById("modal-image").src = item.image;
+    document.getElementById("modal-title").textContent = item.name;
+    document.getElementById("modal-desc").textContent = item.description;
+    document.getElementById("modal-price").textContent = `$${item.price.toFixed(2)}`;
 
-            document.getElementById("add-to-cart-modal").onclick = () => {
-                const selectedSide = document.querySelector('input[name="sides"]:checked').value;
-                const comments = document.getElementById("comments").value;
-                addToCart(item, selectedSide, comments);
-                closeModal();
-            };
+    // Render tags with circular icons
+    const tagsContainer = document.getElementById("modal-tags");
+    tagsContainer.innerHTML = item.tags.map(tag => `
+        <div class="food-tag">
+            <img src="${tag.icon}" alt="${tag.text}" class="tag-icon">
+            <span>${tag.text}</span>
+        </div>
+    `).join('');
 
-            // Reset comments and sides selection when opening modal
-            document.getElementById("comments").value = "";
-            document.querySelector('input[name="sides"][value="Fries"]').checked = true;
+    // Show the modal
+    document.getElementById("food-modal").style.display = "block";
 
-            // Close modal without adding to cart
-            document.querySelector('.close').onclick = () => closeModal();
-        }
+    // Attach event to "Add to Cart" button
+    document.getElementById("add-to-cart-modal").onclick = () => {
+        const selectedSide = document.querySelector('input[name="sides"]:checked').value;
+        const comments = document.getElementById("comments").value;
+        addToCart(item, selectedSide, comments);
+        closeModal();
+    };
+
+    // Reset comments and side selection
+    document.getElementById("comments").value = "";
+    document.querySelector('input[name="sides"][value="Fries"]').checked = true;
+
+    // Attach close functionality
+    document.querySelector('.close').onclick = () => closeModal();
+}
 
         function closeModal() {
             document.getElementById("food-modal").style.display = "none";
@@ -758,6 +1244,9 @@
                     </div>
                 </div>
             `).join('');
+
+            // Enable or disable the order button based on cart content
+            document.getElementById("order-button").disabled = cart.length === 0;
         }
 
         // Event listeners for increase, decrease, and remove buttons
@@ -820,6 +1309,18 @@
         }
 
         document.getElementById("confirm-order-button").addEventListener("click", () => {
+            const subtotal = parseFloat(document.getElementById("confirm-subtotal").textContent.replace('$', ''));
+            const tax = parseFloat(document.getElementById("confirm-tax").textContent.replace('$', ''));
+            const total = parseFloat(document.getElementById("confirm-total").textContent.replace('$', ''));
+            const order = {
+                items: [...cart],
+                subtotal,
+                tax,
+                total,
+                comments: document.getElementById("order-comments").value
+            };
+            orderHistory.push(order);
+
             alert("Order confirmed! Thank you.");
             cart = [];
             updateCart();
@@ -828,6 +1329,44 @@
 
         function closeConfirmOrderModal() {
             document.getElementById("confirm-order-modal").style.display = "none";
+        }
+
+        // History Button Event Listener
+        document.getElementById("history-button").addEventListener("click", () => {
+            openOrderHistoryModal();
+        });
+
+        function openOrderHistoryModal() {
+            const orderHistoryItemsContainer = document.getElementById("order-history-items");
+            orderHistoryItemsContainer.innerHTML = orderHistory.map((order, index) => `
+                <div class="order-history-item">
+                    <h3>Order #${index + 1}</h3>
+                    <div>
+                        ${order.items.map(item => `
+                            <div>
+                                ${item.name} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}
+                                <div>Side: ${item.side}</div>
+                                ${item.comments ? `<div>Comments: ${item.comments}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p><strong>Subtotal:</strong> $${order.subtotal.toFixed(2)}</p>
+                    <p><strong>Tax:</strong> $${order.tax.toFixed(2)}</p>
+                    <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
+                    ${order.comments ? `<p><strong>Order Comments:</strong> ${order.comments}</p>` : ''}
+                </div>
+            `).join('');
+            document.getElementById("order-history-modal").style.display = "block";
+        }
+
+        document.querySelector(".order-history-modal").addEventListener("click", (event) => {
+            if (event.target.classList.contains("order-history-modal")) {
+                closeOrderHistoryModal();
+            }
+        });
+
+        function closeOrderHistoryModal() {
+            document.getElementById("order-history-modal").style.display = "none";
         }
 
         // Tab selection functionality
