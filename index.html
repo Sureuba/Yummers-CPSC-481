@@ -280,6 +280,11 @@
             margin-top: 15px;
         }
 
+        .order-btn:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
         .cart-item .remove-btn {
             background-color: #ff4d4d;
             color: #fff;
@@ -468,29 +473,33 @@
             margin: 5% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 60%; /* Adjust modal size */
+            width: 40%; /* Adjust modal size */
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            display: grid;
-            grid-template-columns: 2fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
         .confirm-order-header {
             font-size: 24px;
             font-weight: bold;
-            grid-column: span 2;
+            text-align: center;
         }
 
         .confirm-order-items {
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
             border-radius: 8px;
             padding: 20px;
-            background-color: #1a2b18;
-            color: #fff;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .confirm-total {
-            background-color: #1a2b18;
-            color: #fff;
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
             padding: 20px;
             border-radius: 8px;
         }
@@ -520,17 +529,57 @@
         }
 
         .order-comments-section {
-            margin-bottom: 20px;
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
+            padding: 10px;
+            border-radius: 8px;
         }
 
         .order-comments-section textarea {
             width: 100%;
-            height: 100px;
+            height: 80px;
             padding: 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 16px;
             resize: none;
+        }
+
+        /* Order History Modal */
+        .order-history-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black with transparency */
+        }
+
+        .order-history-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .order-history-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .order-history-item {
+            border: 1px solid #1a2b18;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -538,7 +587,7 @@
     <!-- Top Navigation -->
     <div class="top-nav">
         <div class="nav-left">
-            <button class="nav-btn">History</button>
+            <button class="nav-btn" id="history-button">History</button>
             <button class="nav-btn">Help</button>
         </div>
         <div class="nav-right">
@@ -581,7 +630,7 @@
             <span>Total:</span>
             <span id="total-price">$0.00</span>
         </div>
-        <button class="order-btn" id="order-button">ORDER</button>
+        <button class="order-btn" id="order-button" disabled>ORDER</button>
     </div>
 
     <!-- Modal -->
@@ -636,42 +685,40 @@
         </div>
     </div>
 
+    <!-- Order History Modal -->
+    <div id="order-history-modal" class="order-history-modal">
+        <div class="order-history-content">
+            <h2 class="order-history-header">Order History</h2>
+            <div id="order-history-items"></div>
+        </div>
+    </div>
+
     <script>
         const menuData = {
             appetizers: [
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" }
+                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"] },
+                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [] }
             ],
             mains: [
-                { name: "Gold Burger", price: 17.99, description: "A heavy burger with gold foil and wedges on the side.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Fish Tacos", price: 16.99, description: "Crispy fish tacos with slaw, pico de gallo, and chipotle sauce.", tags: ["Contains Nuts"], image: "assets/image.png" }
+                { name: "Gold Burger", price: 17.99, description: "A heavy burger with gold foil and wedges on the side.", tags: ["Contains Nuts"] },
+                { name: "Fish Tacos", price: 16.99, description: "Crispy fish tacos with slaw, pico de gallo, and chipotle sauce.", tags: ["Contains Nuts"] }
             ],
             soups: [
-                { name: "Minestrone Soup", price: 9.99, description: "Classic minestrone with vegetables and beans.", tags: [], image: "assets/image.png" }
+                { name: "Minestrone Soup", price: 9.99, description: "Classic minestrone with vegetables and beans.", tags: [] }
             ],
             handhelds: [
-                { name: "Mozzarella Panini", price: 16.99, description: "Mozzarella and tomato panini with fresh basil and olive oil.<br><br>", tags: ["Vegetarian"], image: "assets/image.png" },
-                { name: "Beyond Burger", price: 19.99, description: "Gourmet Beyond Burger topped with vegan cheddar, caramelized onions on a toasted brioche bun.", tags: ["Vegetarian", "Contains Nuts"], image: "assets/image.png" }
+                { name: "Mozzarella Panini", price: 16.99, description: "Mozzarella and tomato panini with fresh basil and olive oil.", tags: ["Vegetarian"] },
+                { name: "Beyond Burger", price: 19.99, description: "Gourmet Beyond Burger topped with vegan cheddar, caramelized onions on a toasted brioche bun.", tags: ["Vegetarian", "Contains Nuts"] }
             ],
             desserts: [
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" }
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [] }
             ],
             drinks: [
-                { name: "Lemonade0", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade2", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade3", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade4", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade5", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade6", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" }
+                { name: "Lemonade", price: 3.99, description: "Freshly squeezed lemonade.", tags: [] }
             ]
         };
+
+        let orderHistory = [];
 
         // Update menu items dynamically
         function updateMenu(tab) {
@@ -682,7 +729,7 @@
                 const itemElement = document.createElement("div");
                 itemElement.classList.add("menu-item");
                 itemElement.innerHTML = `
-                     <img src="${item.image}" alt="${item.name}" class="item-img">
+                    <img src="images/image.png" alt="${item.name}" class="item-img">
                     <h3 class="item-title">${item.name}</h3>
                     <p class="item-desc">${item.description}</p>
                     <div class="price-and-tags">
@@ -697,7 +744,7 @@
 
         // Modal functions
         function openModal(item) {
-            document.getElementById("modal-image").src = item.image;
+            document.getElementById("modal-image").src = "images/image.png";
             document.getElementById("modal-title").textContent = item.name;
             document.getElementById("modal-desc").textContent = item.description;
             document.getElementById("modal-price").textContent = `$${item.price.toFixed(2)}`;
@@ -758,6 +805,9 @@
                     </div>
                 </div>
             `).join('');
+
+            // Enable or disable the order button based on cart content
+            document.getElementById("order-button").disabled = cart.length === 0;
         }
 
         // Event listeners for increase, decrease, and remove buttons
@@ -820,6 +870,18 @@
         }
 
         document.getElementById("confirm-order-button").addEventListener("click", () => {
+            const subtotal = parseFloat(document.getElementById("confirm-subtotal").textContent.replace('$', ''));
+            const tax = parseFloat(document.getElementById("confirm-tax").textContent.replace('$', ''));
+            const total = parseFloat(document.getElementById("confirm-total").textContent.replace('$', ''));
+            const order = {
+                items: [...cart],
+                subtotal,
+                tax,
+                total,
+                comments: document.getElementById("order-comments").value
+            };
+            orderHistory.push(order);
+
             alert("Order confirmed! Thank you.");
             cart = [];
             updateCart();
@@ -828,6 +890,44 @@
 
         function closeConfirmOrderModal() {
             document.getElementById("confirm-order-modal").style.display = "none";
+        }
+
+        // History Button Event Listener
+        document.getElementById("history-button").addEventListener("click", () => {
+            openOrderHistoryModal();
+        });
+
+        function openOrderHistoryModal() {
+            const orderHistoryItemsContainer = document.getElementById("order-history-items");
+            orderHistoryItemsContainer.innerHTML = orderHistory.map((order, index) => `
+                <div class="order-history-item">
+                    <h3>Order #${index + 1}</h3>
+                    <div>
+                        ${order.items.map(item => `
+                            <div>
+                                ${item.name} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}
+                                <div>Side: ${item.side}</div>
+                                ${item.comments ? `<div>Comments: ${item.comments}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p><strong>Subtotal:</strong> $${order.subtotal.toFixed(2)}</p>
+                    <p><strong>Tax:</strong> $${order.tax.toFixed(2)}</p>
+                    <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
+                    ${order.comments ? `<p><strong>Order Comments:</strong> ${order.comments}</p>` : ''}
+                </div>
+            `).join('');
+            document.getElementById("order-history-modal").style.display = "block";
+        }
+
+        document.querySelector(".order-history-modal").addEventListener("click", (event) => {
+            if (event.target.classList.contains("order-history-modal")) {
+                closeOrderHistoryModal();
+            }
+        });
+
+        function closeOrderHistoryModal() {
+            document.getElementById("order-history-modal").style.display = "none";
         }
 
         // Tab selection functionality
