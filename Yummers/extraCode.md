@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Layout</title>
+    <style>
+        /* General Layout */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f6eada;
+            display: grid;
+            grid-template-rows: auto auto 1fr; /* Top Nav, Tabs, Content */
+            grid-template-columns: 1fr auto 350px; /* Menu, Buttons, Cart */
+            gap: 0px; /* Tight layout */
+            height: 100vh;
+            box-sizing: border-box;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            grid-column: 1 / span 3;
+            grid-row: 1 / span 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Slightly increased gap */
+            flex-wrap: wrap; /* Allow buttons to wrap if needed */
+        }
+
+        .nav-btn {
+            background-color: #000;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 25px;
+            font-size: 20px;  /* Adjusted font size */
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: #333;
+        }
+
+        .nav-right {
+            margin-right: 350px; /* Keep Language & Request Bill aligned properly */
+        }
+
+        .language-icon {
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Tabs Section */
+        .menu-tabs {
+            grid-column: 1 / span 2;
+            grid-row: 2 / span 1;
+            display: flex;
+            justify-content: flex-start;
+            gap: 15px;
+            padding: 10px 20px 0 20px;
+            flex-wrap: wrap;
+        }
+
+        .menu-tab {
+            position: relative;
+            padding: 15px 30px;
+            background-color: #294412;  /* Default background color */
+            color: white;
+            font-size: 18px;
+            text-align: center;
+            cursor: pointer;
+            clip-path: polygon(0 100%, 0 50%, 50% 0, 100% 50%, 100% 100%);
+            transition: background-color 0.3s ease;  /* Smooth transition on hover and active */
+        }
+
+        .menu-tab.active {
+            background-color: #3e6623;  /* Active tab color */
+        }
+
+        .menu-tab:hover {
+            background-color: #3e6623;  /* Hover effect */
+        }
+
+        /* Food Menu Section */
+        .menu-section {
+            grid-row: 3 / span 1;
+            grid-column: 1 / span 1;
+            background-color: #1a2b18;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-y: auto;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .menu-item {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left; /* Align text to the left */
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            position: relative; /* For tag positioning */
+            cursor: pointer;
+        }
+
+        .item-img {
+            width: 100%;
+            height: 180px;
+            border-radius: 8px;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .item-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        .item-desc {
+            font-size: 16px;
+            color: #757575;
+            margin: 10px 0;
+        }
+
+        .price-and-tags {
+            display: flex;
+            align-items: center;
+            justify-content: space-between; /* Space between price and tags */
+            margin-top: 10px;
+        }
+
+        .price {
+            font-weight: bold;
+            font-size: 18px;
+            color: #333;
+        }
+
+        .tags {
+            display: flex;
+            gap: 5px; /* Spacing between tags */
+        }
+
+        .tag {
+            background-color: #294412;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .pagination button {
+            background-color: #294412;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .pagination button:hover {
+            background-color: #3e6623;
+        }
+
+        /* Cart Section */
+        .cart-panel {
+            grid-row: 1 / span 3;
+            grid-column: 3 / span 1;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between; /* Ensure the button is at the bottom */
+            position: relative;
+            transition: all 0.3s ease;
+            overflow-y: auto; /* Allow cart to scroll when it overflows */
+        }
+
+        .cart-header {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .cart-summary {
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            font-size: 18px;
+            margin-top: auto; /* Ensures Total stays just above the Order button */
+        }
+
+        .cart-item {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            border-bottom: 1px solid #e6e6e6;
+            font-size: 18px; /* Adjusted font size */
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .cart-item .quantity-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .cart-item .quantity {
+            font-size: 16px;
+        }
+
+        .cart-item .increase, .cart-item .decrease {
+            background-color: #294412;
+            color: #fff;
+            border: none;
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .cart-item .increase:hover, .cart-item .decrease:hover {
+            background-color: #3e6623;
+        }
+
+        .cart-item-details {
+            font-size: 16px;
+            color: #757575; /* Light grey color for sides and comments */
+            margin-top: 5px;
+        }
+
+        .order-btn {
+            background-color: #294412;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 20px;
+            margin-top: 15px;
+        }
+
+        .cart-item .remove-btn {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            padding: 5px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cart-item .remove-btn:hover {
+            background-color: #ff1a1a;
+        }
+
+        /* Modal */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black with transparency */
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 50%; /* Adjusted modal size */
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .food-modal-image-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .food-photo {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .food-tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .food-tag {
+            background-color: #294412;
+            color: #fff;
+            font-size: 14px;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-align: center;
+            margin-top: 5px;
+        }
+
+        .food-modal-details {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .food-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .food-description {
+            font-size: 16px;
+            color: #555;
+        }
+
+        .food-price {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* Sides Selection */
+        .sides-section {
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .sides-section h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .sides-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .side-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Substitutions and Comments */
+        .comments-section {
+            margin-top: 20px;
+        }
+
+        .comments-section label {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .comments-section textarea {
+            width: 100%;
+            height: 80px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            resize: none;
+        }
+
+        /* Add to Cart Button */
+        .add-to-cart-button {
+            background-color: #294412;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 20px;
+            align-self: flex-end;
+        }
+
+        .add-to-cart-button:hover {
+            background-color: #3e6623;
+        }
+
+        /* Confirm Order Modal */
+        .confirm-order-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black with transparency */
+        }
+
+        .confirm-order-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%; /* Adjust modal size */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        .confirm-order-header {
+            font-size: 24px;
+            font-weight: bold;
+            grid-column: span 2;
+        }
+
+        .confirm-order-items {
+            border-radius: 8px;
+            padding: 20px;
+            background-color: #1a2b18;
+            color: #fff;
+        }
+
+        .confirm-total {
+            background-color: #1a2b18;
+            color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .confirm-total p {
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+
+        .confirm-btn {
+            background-color: #00c800;
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center;
+            margin-top: 10px;
+            align-self: center;
+        }
+
+        .confirm-btn:hover {
+            background-color: #00a800;
+        }
+
+        .order-comments-section {
+            margin-bottom: 20px;
+        }
+
+        .order-comments-section textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="top-nav">
+        <div class="nav-left">
+            <button class="nav-btn">History</button>
+            <button class="nav-btn">Help</button>
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn">
+                <img src="images/language_icon.png" alt="Language Icon" class="language-icon">
+                Language
+            </button>
+            <button class="nav-btn">Request Bill</button>
+        </div>
+    </div>
+
+    <!-- Tabs Section -->
+    <div class="menu-tabs">
+        <div class="menu-tab active" data-tab="appetizers">Appetizers</div>
+        <div class="menu-tab" data-tab="mains">Mains</div>
+        <div class="menu-tab" data-tab="soups">Soups/Salads</div>
+        <div class="menu-tab" data-tab="handhelds">Handhelds</div>
+        <div class="menu-tab" data-tab="desserts">Desserts</div>
+        <div class="menu-tab" data-tab="drinks">Drinks</div>
+    </div>
+
+    <!-- Food Menu Section -->
+    <div class="menu-section">
+        <div class="menu-grid" id="menu-grid">
+            <!-- Dynamic food items will appear here -->
+        </div>
+        <div class="pagination">
+            <button>&larr;</button>
+            <button>&rarr;</button>
+        </div>
+    </div>
+
+    <!-- Cart Section -->
+    <div class="cart-panel">
+        <h3 class="cart-header">Order Summary</h3>
+        <div class="cart-items">
+            <!-- Items added to cart will appear here -->
+        </div>
+        <div class="cart-summary">
+            <span>Total:</span>
+            <span id="total-price">$0.00</span>
+        </div>
+        <button class="order-btn" id="order-button">ORDER</button>
+    </div>
+
+    <!-- Modal -->
+    <div id="food-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="food-modal-image-container">
+                <img id="modal-image" src="" alt="" class="food-photo">
+                <div id="modal-tags" class="food-tags-container"></div>
+                <!-- Comments Section -->
+                <div class="comments-section">
+                    <label for="comments">Substitutions/Comments:</label>
+                    <textarea id="comments" placeholder="Type here..."></textarea>
+                </div>
+            </div>
+            <div class="food-modal-details">
+                <h3 id="modal-title" class="food-title"></h3>
+                <p id="modal-desc" class="food-description"></p>
+                <p id="modal-price" class="food-price"></p>
+
+                <!-- Sides Selection Section -->
+                <div class="sides-section">
+                    <h4>Sides (Choose One)</h4>
+                    <div class="sides-options">
+                        <label class="side-option"><input type="radio" name="sides" value="Fries" checked> Fries</label>
+                        <label class="side-option"><input type="radio" name="sides" value="Yam Fries"> Yam Fries + $2.00</label>
+                        <label class="side-option"><input type="radio" name="sides" value="House Salad"> House Salad</label>
+                        <label class="side-option"><input type="radio" name="sides" value="Caesar Salad"> Caesar Salad + $2.00</label>
+                    </div>
+                </div>
+
+                <!-- Add to Cart Button -->
+                <button id="add-to-cart-modal" class="add-to-cart-button">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Order Modal -->
+    <div id="confirm-order-modal" class="confirm-order-modal">
+        <div class="confirm-order-content">
+            <h2 class="confirm-order-header">CONFIRM ORDER</h2>
+            <div id="confirm-order-items" class="confirm-order-items"></div>
+            <div class="order-comments-section">
+                <textarea id="order-comments" placeholder="Comments..."></textarea>
+            </div>
+            <div class="confirm-total">
+                <p>Subtotal: <span id="confirm-subtotal"></span></p>
+                <p>Tax: <span id="confirm-tax"></span></p>
+                <p>Total: <span id="confirm-total"></span></p>
+            </div>
+            <button class="confirm-btn" id="confirm-order-button">CONFIRM ORDER</button>
+        </div>
+    </div>
+
+    <script>
+        const menuData = {
+            appetizers: [
+                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
+                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
+                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" }
+            ],
+            mains: [
+                { name: "Gold Burger", price: 17.99, description: "A heavy burger with gold foil and wedges on the side.", tags: ["Contains Nuts"], image: "assets/image.png" },
+                { name: "Fish Tacos", price: 16.99, description: "Crispy fish tacos with slaw, pico de gallo, and chipotle sauce.", tags: ["Contains Nuts"], image: "assets/image.png" }
+            ],
+            soups: [
+                { name: "Minestrone Soup", price: 9.99, description: "Classic minestrone with vegetables and beans.", tags: [], image: "assets/image.png" }
+            ],
+            handhelds: [
+                { name: "Mozzarella Panini", price: 16.99, description: "Mozzarella and tomato panini with fresh basil and olive oil.<br><br>", tags: ["Vegetarian"], image: "assets/image.png" },
+                { name: "Beyond Burger", price: 19.99, description: "Gourmet Beyond Burger topped with vegan cheddar, caramelized onions on a toasted brioche bun.", tags: ["Vegetarian", "Contains Nuts"], image: "assets/image.png" }
+            ],
+            desserts: [
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
+                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" }
+            ],
+            drinks: [
+                { name: "Lemonade0", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade2", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade3", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade4", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade5", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+                { name: "Lemonade6", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" }
+            ]
+        };
+
+        // Update menu items dynamically
+        function updateMenu(tab) {
+            const menuGrid = document.getElementById("menu-grid");
+            menuGrid.innerHTML = '';
+
+            menuData[tab].forEach(item => {
+                const itemElement = document.createElement("div");
+                itemElement.classList.add("menu-item");
+                itemElement.innerHTML = `
+                     <img src="${item.image}" alt="${item.name}" class="item-img">
+                    <h3 class="item-title">${item.name}</h3>
+                    <p class="item-desc">${item.description}</p>
+                    <div class="price-and-tags">
+                        <p class="price">$${item.price}</p>
+                        <div class="tags">${item.tags.map(tag => `<span class="tag">${tag === 'Contains Nuts' ? 'N' : tag === 'Vegetarian' ? 'V' : tag}</span>`).join('')}</div>
+                    </div>
+                `;
+                itemElement.onclick = () => openModal(item);
+                menuGrid.appendChild(itemElement);
+            });
+        }
+
+        // Modal functions
+        function openModal(item) {
+            document.getElementById("modal-image").src = item.image;
+            document.getElementById("modal-title").textContent = item.name;
+            document.getElementById("modal-desc").textContent = item.description;
+            document.getElementById("modal-price").textContent = `$${item.price.toFixed(2)}`;
+            const tagsContainer = document.getElementById("modal-tags");
+            tagsContainer.style.display = item.tags.length > 0 ? "flex" : "none";
+            tagsContainer.innerHTML = item.tags.map(tag => `<span class='food-tag'>${tag}</span>`).join('');
+            document.getElementById("food-modal").style.display = "block";
+
+            document.getElementById("add-to-cart-modal").onclick = () => {
+                const selectedSide = document.querySelector('input[name="sides"]:checked').value;
+                const comments = document.getElementById("comments").value;
+                addToCart(item, selectedSide, comments);
+                closeModal();
+            };
+
+            // Reset comments and sides selection when opening modal
+            document.getElementById("comments").value = "";
+            document.querySelector('input[name="sides"][value="Fries"]').checked = true;
+
+            // Close modal without adding to cart
+            document.querySelector('.close').onclick = () => closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById("food-modal").style.display = "none";
+        }
+
+        // Cart functions
+        let cart = [];
+        function addToCart(item, side, comments) {
+            const cartItem = cart.find(cartItem => cartItem.name === item.name && cartItem.side === side && cartItem.comments === comments);
+            if (cartItem) {
+                cartItem.quantity++;
+            } else {
+                cart.push({ ...item, quantity: 1, side, comments });
+            }
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartItemsContainer = document.querySelector('.cart-items');
+            const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+            document.getElementById("total-price").textContent = `$${totalPrice.toFixed(2)}`;
+            cartItemsContainer.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <div class="cart-item-header">
+                        ${item.name} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}
+                        <div class="quantity-controls">
+                            <button class="decrease" data-item="${item.name}" data-side="${item.side}" data-comments="${item.comments}">-</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="increase" data-item="${item.name}" data-side="${item.side}" data-comments="${item.comments}">+</button>
+                        </div>
+                        <button class="remove-btn" data-item="${item.name}" data-side="${item.side}" data-comments="${item.comments}">🗑️</button>
+                    </div>
+                    <div class="cart-item-details">
+                        <p><strong>Side:</strong> ${item.side}</p>
+                        ${item.comments ? `<p><strong>Comments:</strong> ${item.comments}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Event listeners for increase, decrease, and remove buttons
+        document.querySelector(".cart-items").addEventListener("click", (event) => {
+            const button = event.target;
+
+            if (button.classList.contains("increase") || button.classList.contains("decrease")) {
+                const itemName = button.getAttribute("data-item");
+                const itemSide = button.getAttribute("data-side");
+                const itemComments = button.getAttribute("data-comments");
+                const cartItem = cart.find(item => item.name === itemName && item.side === itemSide && item.comments === itemComments);
+
+                if (button.classList.contains("increase")) {
+                    cartItem.quantity++;
+                } else if (button.classList.contains("decrease") && cartItem.quantity > 1) {
+                    cartItem.quantity--;
+                }
+
+                updateCart();
+            }
+
+            // Remove item from cart
+            if (button.classList.contains("remove-btn")) {
+                const itemName = button.getAttribute("data-item");
+                const itemSide = button.getAttribute("data-side");
+                const itemComments = button.getAttribute("data-comments");
+                cart = cart.filter(item => !(item.name === itemName && item.side === itemSide && item.comments === itemComments));
+                updateCart();
+            }
+        });
+
+        // Order Button Event Listener
+        document.getElementById("order-button").addEventListener("click", () => {
+            openConfirmOrderModal();
+        });
+
+        // Confirm Order Modal functions
+        function openConfirmOrderModal() {
+            const confirmOrderItemsContainer = document.getElementById("confirm-order-items");
+            confirmOrderItemsContainer.innerHTML = cart.map(item => `
+                <div class="confirm-order-item">
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    <div class="confirm-order-details">
+                        <p>Side: ${item.side}</p>
+                        ${item.comments ? `<p>Comments: ${item.comments}</p>` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+            const tax = subtotal * 0.1; // Assuming 10% tax
+            const total = subtotal + tax;
+
+            document.getElementById("confirm-subtotal").textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById("confirm-tax").textContent = `$${tax.toFixed(2)}`;
+            document.getElementById("confirm-total").textContent = `$${total.toFixed(2)}`;
+
+            document.getElementById("confirm-order-modal").style.display = "block";
+        }
+
+        document.getElementById("confirm-order-button").addEventListener("click", () => {
+            alert("Order confirmed! Thank you.");
+            cart = [];
+            updateCart();
+            closeConfirmOrderModal();
+        });
+
+        function closeConfirmOrderModal() {
+            document.getElementById("confirm-order-modal").style.display = "none";
+        }
+
+        // Tab selection functionality
+        document.querySelectorAll('.menu-tab').forEach(tab => {
+            tab.onclick = () => {
+                document.querySelectorAll('.menu-tab').forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                updateMenu(tab.dataset.tab);
+            };
+        });
+
+        // Initialize menu
+        updateMenu("appetizers");
+    </script>
+</body>
+</html>
