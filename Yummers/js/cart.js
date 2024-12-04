@@ -1,6 +1,9 @@
 //Filename: cart.js 
 // Handles cart functionalities
 
+// Filename: cart.js
+// Handles cart functionalities
+
 let cart = [];
 
 function addToCart(item, side, comments) {
