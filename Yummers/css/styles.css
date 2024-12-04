@@ -1,0 +1,311 @@
+/* Filename: style.css
+    styles pages of html file */
+
+/* General Layout */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f6eada;
+    display: grid;
+    grid-template-rows: auto auto 1fr; /* Top Nav, Tabs, Content */
+    grid-template-columns: 1fr auto 350px; /* Menu, Buttons, Cart */
+    gap: 0px; /* Tight layout */
+    height: 100vh;
+    box-sizing: border-box;
+}
+
+/* Top Navigation */
+.top-nav {
+    grid-column: 1 / span 3;
+    grid-row: 1 / span 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 25px;
+}
+
+.nav-left, .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Slightly increased gap */
+    flex-wrap: wrap; /* Allow buttons to wrap if needed */
+}
+
+.nav-btn {
+    background-color: #000;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 25px;
+    font-size: 20px;  /* Adjusted font size */
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+    background-color: #333;
+}
+
+.nav-right {
+    margin-right: 350px; /* Keep Language & Request Bill aligned properly */
+}
+
+.language-icon {
+    width: 30px;
+    height: 30px;
+}
+
+/* Tabs Section */
+.menu-tabs {
+    grid-column: 1 / span 2;
+    grid-row: 2 / span 1;
+    display: flex;
+    justify-content: flex-start;
+    gap: 15px;
+    padding: 10px 20px 0 20px;
+    flex-wrap: wrap;
+}
+
+.menu-tab {
+    position: relative;
+    padding: 15px 30px;
+    background-color: #294412;  /* Default background color */
+    color: white;
+    font-size: 18px;
+    text-align: center;
+    cursor: pointer;
+    clip-path: polygon(0 100%, 0 50%, 50% 0, 100% 50%, 100% 100%);
+    transition: background-color 0.3s ease;  /* Smooth transition on hover and active */
+}
+
+.menu-tab.active {
+    background-color: #3e6623;  /* Active tab color */
+}
+
+.menu-tab:hover {
+    background-color: #3e6623;  /* Hover effect */
+}
+
+/* Food Menu Section */
+.menu-section {
+    grid-row: 3 / span 1;
+    grid-column: 1 / span 1;
+    background-color: #1a2b18;
+    padding: 20px;
+    border-radius: 8px;
+    overflow-y: auto;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.menu-item {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: left; /* Align text to the left */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative; /* For tag positioning */
+    cursor: pointer;
+}
+
+.item-img {
+    width: 100%;
+    height: 180px;
+    border-radius: 8px;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.item-title {
+    font-size: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333;
+}
+
+.item-desc {
+    font-size: 16px;
+    color: #757575;
+    margin: 10px 0;
+}
+
+.price-and-tags {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Space between price and tags */
+    margin-top: 10px;
+}
+
+.price {
+    font-weight: bold;
+    font-size: 18px;
+    color: #333;
+}
+
+.tags {
+    display: flex;
+    gap: 5px; /* Spacing between tags */
+}
+
+.tag {
+    background-color: #294412;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 5px 10px;
+    border-radius: 4px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.pagination button {
+    background-color: #294412;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.pagination button:hover {
+    background-color: #3e6623;
+}
+
+/* Cart Section */
+.cart-panel {
+    grid-row: 1 / span 3;
+    grid-column: 3 / span 1;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Ensure the button is at the bottom */
+    overflow-y: auto; /* Allow cart to scroll when it overflows */
+}
+
+.cart-header {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.cart-summary {
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+}
+
+.cart-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-bottom: 1px solid #e6e6e6;
+    font-size: 18px; /* Adjusted font size */
+}
+
+.order-btn {
+    background-color: #294412;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 20px;
+}
+
+.order-btn:disabled {
+    background-color: #aaa;
+    cursor: not-allowed;
+}
+
+/* Modal */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 10px;
+    width: 50%;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.food-modal-image-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.food-photo {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.food-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tag-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.food-modal-details {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.add-to-cart-button {
+    background-color: #294412;
+    color: #fff;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.add-to-cart-button:hover {
+    background-color: #3e6623;
+}
