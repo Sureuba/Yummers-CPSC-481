@@ -79,7 +79,7 @@
         .menu-tab {
             flex-grow: 1; 
             text-align: center;
-            padding: 18px 0; 
+            padding: 10px 0; 
             margin: 0 5px; 
             background-color: #294412;
             color: white;
@@ -92,6 +92,7 @@
             align-items: center; 
             justify-content: center; 
             line-height: 1.2; 
+            padding-top: 25px;
         }
 
         .menu-tab.active {
@@ -472,7 +473,7 @@
             background-color: #3e6623;
         }
 
-        /* Confirm Order Modal */
+        /* Confirm Order Modal***************** */
         .confirm-order-modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
@@ -543,7 +544,45 @@
         .confirm-btn:hover {
             background-color: #00a800;
         }
+        
+        /* ***Order Confirmed! Thank you Modal Styling */
+        .success-modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 9999; /* Ensure it's on top of everything else */
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.5); /* Semi-transparent overlay */
+        }
 
+        .success-content {
+            background-color: #fff;
+            margin: 10% auto; 
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 600px; /* Adjust width as needed */
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+
+        .close-success {
+            background-color: #294412;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .close-success:hover {
+            background-color: #3e6623;
+        }
+
+        /* order commends style */
         .order-comments-section {
             border: 2px solid #1a2b18;
             background-color: #fff;
@@ -706,6 +745,15 @@
                 <p>Total: <span id="confirm-total"></span></p>
             </div>
             <button class="confirm-btn" id="confirm-order-button">CONFIRM ORDER</button>
+        </div>
+    </div>
+
+    <!-- Order Confirmed! Thank you Modal -->
+    <div id="success-modal" class="success-modal">
+        <div class="success-content">
+            <h2>Order Confirmed!</h2>
+            <p>Thank you for your order.</p>
+            <button class="close-success" id="close-success-button">OK</button>
         </div>
     </div>
 
@@ -1331,10 +1379,16 @@
             };
             orderHistory.push(order);
 
-            alert("Order confirmed! Thank you.");
+            // Show the success modal instead of the alert:
+            document.getElementById("success-modal").style.display = "block";
             cart = [];
             updateCart();
             closeConfirmOrderModal();
+        });
+
+
+        document.getElementById("close-success-button").addEventListener("click", () => {
+            document.getElementById("success-modal").style.display = "none";
         });
 
         function closeConfirmOrderModal() {
