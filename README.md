@@ -4,5 +4,5 @@ We want to deliver a seamless UI experience to the restaurant’s customers for 
 Using: HTML, CSS, JavaScript
 
 Check out our live website!
-https://celosiaz.github.io/481/
+[Yummers](https://sureuba.github.io/Yummers-CPSC-481/)
 
