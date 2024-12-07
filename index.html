@@ -544,7 +544,7 @@
         .confirm-btn:hover {
             background-color: #00a800;
         }
-        
+
         /* ***Order Confirmed! Thank you Modal Styling */
         .success-modal {
             display: none; /* Hidden by default */
@@ -559,11 +559,35 @@
 
         .success-content {
             background-color: #fff;
-            margin: 10% auto; 
+            margin: 10% auto;
             padding: 40px;
             border-radius: 10px;
-            max-width: 600px; /* Adjust width as needed */
+            width: 600px; 
+            height: 400px; 
             box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-content h2 {
+            font-size: 45px; /* Increase the font size of the heading */
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .success-content p {
+            font-size: 30px; /* Increase the font size of the paragraph */
+            margin-bottom: 20px;
+        }
+
+        .success-content button {
+            font-size: 30px; /* Make the button text larger */
+            padding: 10px 30px; 
+            width: 150px;
+            height: 80px;
             text-align: center;
         }
 
@@ -636,6 +660,76 @@
             padding: 15px;
             margin-bottom: 15px;
         }
+
+        /* Help Modal (Call Waiter) *********/
+        .help-modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 9999; /* Ensure it's on top of everything else */
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.5); /* Semi-transparent overlay */
+        }
+
+        .help-content {
+            background-color: #f6eada;
+            margin: 10% auto; 
+            padding: 40px; 
+            border-radius: 10px;
+            width: 600px; 
+            height: 400px; 
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .help-content h2 {
+            font-size: 30px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .help-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 70px;
+        }
+
+        .help-yes, .help-no {
+            border: none;
+            padding: 20px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 40px;
+            width: 200px;
+            height: 130px;
+            text-align: center;
+        }
+
+        .help-yes {
+            background-color: #00c800;
+            color: #fff;
+        }
+
+        .help-no {
+            background-color: #294412;
+            color: #fff;
+        }
+
+        .help-yes:hover {
+            background-color: #00a800;
+        }
+
+        .help-no:hover {
+            background-color: #3e6623;
+        }
+
+
     </style>
 </head>
 <body>
@@ -644,7 +738,7 @@
     <div class="top-nav">
         <div class="nav-left">
             <button class="nav-btn" id="history-button">History</button>
-            <button class="nav-btn">Help</button>
+            <button class="nav-btn" id="help-button">Help</button>
         </div>
         <div class="nav-right">
             <button class="nav-btn">
@@ -754,6 +848,17 @@
             <h2>Order Confirmed!</h2>
             <p>Thank you for your order.</p>
             <button class="close-success" id="close-success-button">OK</button>
+        </div>
+    </div>
+
+    <!-- Help Modal (Call Waiter) -->
+    <div id="call-waiter-modal" class="help-modal">
+        <div class="help-content">
+            <h2>Would you like to call the waiter to your table?</h2>
+            <div class="help-buttons">
+                <button id="help-yes-button" class="help-yes">YES</button>
+                <button id="help-no-button" class="help-no">NO</button>
+            </div>
         </div>
     </div>
 
@@ -1206,29 +1311,32 @@
         let orderHistory = [];
 
         // Update menu items dynamically
-        function updateMenu(tab) {
+    function updateMenu(tab) {
     const menuGrid = document.getElementById("menu-grid");
     menuGrid.innerHTML = '';
 
-    menuData[tab].forEach(item => {
-        const itemElement = document.createElement("div");
-        itemElement.classList.add("menu-item");
-        itemElement.innerHTML = `
-            <img src="${item.image}" alt="${item.name}" class="item-img">
-            <h3 class="item-title">${item.name}</h3>
-            <p class="item-desc">${item.description}</p>
-            <div class="price-and-tags">
-                <p class="price">$${item.price}</p>
-                <div class="tags">
-                    ${item.tags.map(tag => `<img src="${tag.icon}" alt="${tag.text}" class="tag-icon">`).join('')}
+        menuData[tab].forEach(item => {
+            const itemElement = document.createElement("div");
+            itemElement.classList.add("menu-item");
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="item-img">
+                <h3 class="item-title">${item.name}</h3>
+                <p class="item-desc">${item.description}</p>
+                <div class="price-and-tags">
+                    <p class="price">$${item.price}</p>
+                    <div class="tags">
+                        ${item.tags.map(tag => `<img src="${tag.icon}" alt="${tag.text}" class="tag-icon">`).join('')}
+                    </div>
                 </div>
-            </div>
-        `;
-        itemElement.onclick = () => openModal(item);
-        menuGrid.appendChild(itemElement);
-    });
-}
+            `;
+            itemElement.onclick = () => openModal(item);
+            menuGrid.appendChild(itemElement);
+        });
+    }
+
     
+
+
         // Modal functions
         function openModal(item) {
     // Set modal image, title, description, and price
@@ -1263,11 +1371,12 @@
 
     // Attach close functionality
     document.querySelector('.close').onclick = () => closeModal();
-}
+    }
+    //end help functions
 
-        function closeModal() {
-            document.getElementById("food-modal").style.display = "none";
-        }
+    function closeModal() {
+        document.getElementById("food-modal").style.display = "none";
+    }
 
         // Cart functions
         let cart = [];
@@ -1482,6 +1591,20 @@ function switchTab(direction) {
 // Attach event listeners to the arrow buttons
 leftArrow.addEventListener("click", () => switchTab("left"));
 rightArrow.addEventListener("click", () => switchTab("right"));
+
+// Add event listeners for Help Modal
+        document.getElementById("help-button").addEventListener("click", () => {
+            document.getElementById("call-waiter-modal").style.display = "block";
+        });
+
+        document.getElementById("help-yes-button").addEventListener("click", () => {
+            alert("The waiter has been called to your table.");
+            document.getElementById("call-waiter-modal").style.display = "none";
+        });
+
+        document.getElementById("help-no-button").addEventListener("click", () => {
+            document.getElementById("call-waiter-modal").style.display = "none";
+        });
 
 //************************************************
     </script>
