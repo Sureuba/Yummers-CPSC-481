@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Menu Layout</title>
     <style>
+        /* ******CSS STYLING AESTHETICS***************************************************************** */
         /* General Layout */
         body {
             margin: 0;
@@ -69,22 +70,29 @@
             grid-column: 1 / span 2;
             grid-row: 2 / span 1;
             display: flex;
-            justify-content: flex-start;
-            gap: 15px;
+            justify-content: space-between;
+            gap: 0px;
             padding: 10px 20px 0 20px;
-            flex-wrap: wrap;
+
         }
 
         .menu-tab {
-            position: relative;
-            padding: 15px 30px;
-            background-color: #294412;  /* Default background color */
+            flex-grow: 1; 
+            text-align: center;
+            padding: 10px 0; 
+            margin: 0 5px; 
+            background-color: #294412;
             color: white;
             font-size: 18px;
-            text-align: center;
+            font-weight: bold;
+            clip-path: polygon(0 100%, 0 50%, 50% 0, 100% 50%, 100% 100%); 
             cursor: pointer;
-            clip-path: polygon(0 100%, 0 50%, 50% 0, 100% 50%, 100% 100%);
-            transition: background-color 0.3s ease;  /* Smooth transition on hover and active */
+            transition: background-color 0.3s ease; 
+            display: flex;
+            align-items: center; 
+            justify-content: center; 
+            line-height: 1.2; 
+            padding-top: 25px;
         }
 
         .menu-tab.active {
@@ -169,31 +177,7 @@
             border-radius: 4px;
         }
 
-        .pagination {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-        }
-
-        .pagination button {
-            background-color: #294412;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            text-align: center;
-            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .pagination button:hover {
-            background-color: #3e6623;
-        }
+        
 
         /* Cart Section */
         .cart-panel {
@@ -280,6 +264,11 @@
             margin-top: 15px;
         }
 
+        .order-btn:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
         .cart-item .remove-btn {
             background-color: #ff4d4d;
             color: #fff;
@@ -306,7 +295,7 @@
         }
 
         .modal-content {
-            background-color: white;
+            background-color: #f6eada;
             margin: 5% auto;
             padding: 20px;
             border-radius: 10px;
@@ -325,11 +314,11 @@
         }
 
         .food-photo {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-            object-fit: cover;
-        }
+    width: 300px; /* Set a fixed width */
+    height: 200px; /* Set a fixed height */
+    border-radius: 10px;
+    object-fit: cover; /* Ensures the image fills the area without distortion */
+}
 
         .food-tags-container {
             display: flex;
@@ -338,15 +327,24 @@
             margin-top: 10px;
         }
 
+        .tag-icon {
+        width: 30px; /* Adjust size as needed */
+        height: 30px; /* Ensures the image remains square */
+        border-radius: 50%; /* Makes the image circular */
+        object-fit: cover; /* Ensures the image scales properly within the circle */
+        }
+
         .food-tag {
-            background-color: #294412;
-            color: #fff;
-            font-size: 14px;
-            font-weight: bold;
-            padding: 5px 10px;
-            border-radius: 4px;
-            text-align: center;
-            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        } 
+
+        .food-tag img {
+        width: 30px; /* Adjust size as needed */
+        height: 30px; /* Ensures the image remains square */
+        border-radius: 50%; /* Makes the image circular */
+        object-fit: cover; /* Ensures the image scales properly within the circle */
         }
 
         .food-modal-details {
@@ -435,23 +433,24 @@
 
         /* Add to Cart Button */
         .add-to-cart-button {
+            position: absolute;
+            right: 5px;
+            bottom: 5px;
             background-color: #294412;
             color: #fff;
             border: none;
-            padding: 15px;
+            padding: 15px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 18px;
             text-align: center;
-            margin-top: 20px;
-            align-self: flex-end;
         }
 
         .add-to-cart-button:hover {
             background-color: #3e6623;
         }
 
-        /* Confirm Order Modal */
+        /* Confirm Order Modal***************** */
         .confirm-order-modal {
             display: none; /* Hidden by default */
             position: fixed; /* Stay in place */
@@ -464,33 +463,37 @@
         }
 
         .confirm-order-content {
-            background-color: white;
+            background-color: #f6eada;
             margin: 5% auto;
             padding: 20px;
             border-radius: 10px;
-            width: 60%; /* Adjust modal size */
+            width: 40%; /* Adjust modal size */
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-            display: grid;
-            grid-template-columns: 2fr 1fr;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
         .confirm-order-header {
             font-size: 24px;
             font-weight: bold;
-            grid-column: span 2;
+            text-align: center;
         }
 
         .confirm-order-items {
+            border: 2px solid #1a2b18;
+            background-color: white;
+            color: #000;
             border-radius: 8px;
             padding: 20px;
-            background-color: #1a2b18;
-            color: #fff;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
         .confirm-total {
-            background-color: #1a2b18;
-            color: #fff;
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
             padding: 20px;
             border-radius: 8px;
         }
@@ -506,44 +509,398 @@
             background-color: #00c800;
             color: #fff;
             border: none;
-            padding: 15px;
+            padding: 10px 20px;
             border-radius: 8px;
             cursor: pointer;
             font-size: 18px;
             text-align: center;
             margin-top: 10px;
-            align-self: center;
         }
 
         .confirm-btn:hover {
             background-color: #00a800;
         }
 
-        .order-comments-section {
+        /* ***Order Confirmed! Thank you Modal Styling */
+        .success-modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 9999; /* Ensure it's on top of everything else */
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.5); /* Semi-transparent overlay */
+        }
+
+        .success-content {
+            background-color: #f6eada;
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 10px;
+            width: 600px; 
+            height: 400px; 
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+            display: flex; 
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .success-content h2 {
+            font-size: 45px; /* Increase the font size of the heading */
+            font-weight: bold;
             margin-bottom: 20px;
+        }
+
+        .success-content p {
+            font-size: 30px; /* Increase the font size of the paragraph */
+            margin-bottom: 20px;
+        }
+
+        .success-content button {
+            font-size: 30px; /* Make the button text larger */
+            padding: 10px 30px; 
+            width: 150px;
+            height: 80px;
+            text-align: center;
+        }
+
+        .close-success {
+            background-color: #294412;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+
+        .close-success:hover {
+            background-color: #3e6623;
+        }
+
+        /* order commends style */
+        .order-comments-section {
+            border: 2px solid #1a2b18;
+            background-color: #fff;
+            color: #000;
+            padding: 10px;
+            border-radius: 8px;
         }
 
         .order-comments-section textarea {
             width: 100%;
-            height: 100px;
+            height: 80px;
             padding: 10px;
             border-radius: 8px;
             border: 1px solid #ccc;
             font-size: 16px;
             resize: none;
         }
+
+        /* Order History Modal */
+        .order-history-modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 2; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black with transparency */
+        }
+
+        .order-history-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 60%;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            overflow-y: auto;
+            max-height: 80vh;
+        }
+
+        .order-history-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .order-history-item {
+            border: 1px solid #1a2b18;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        textarea#allergy-comments {
+            width: 100%; 
+            height: 80px; 
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+            resize: none;
+            margin-top: 20px;
+        }
+        
+        button#allergy-confirm-button {
+            margin-top: 20px;
+            background-color: #00c800;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        
+        button#allergy-confirm-button:hover {
+            background-color: #00a800;
+        }
+
+        #dietary-restrictions-modal {
+            display: none; /* Initially hidden */
+            position: fixed;
+            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px; /* Adjusted width to match Figma */
+            height: auto; /* Height adjusts dynamically based on content */
+            background: #F6EADA; /* Background color from Figma */
+            border-radius: 24px; /* Rounded corners */
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+            padding: 30px; /* Inner padding for spacing */
+            font-family: Arial, sans-serif;
+        }
+        
+        .dietary-restrictions-header {
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        .dietary-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        
+        .dietary-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+        }
+        
+        textarea#dietary-comments {
+            width: 100%;
+            height: 100px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            resize: none;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .food-modal-buttons {
+            display: relative;
+            margin-top: 20px;
+            height: 10px; /* Ensure enough space for buttons */
+            justify-content: space-between; /* Align buttons to opposite ends */
+        }
+        
+        .food-description-back-button {
+            position: absolute;
+            left: 5px;
+            bottom: 5px;
+            background-color: #294412;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            align-self: flex-start; /* Ensures alignment with the section */
+        }
+        .food-description-back-button:hover {
+            background-color: #3e6623;
+        }
+
+        .confirm-order-buttons {
+            display: flex;
+            justify-content: space-between; /* Align buttons to opposite ends */
+            margin-top: 20px; /* Add spacing above buttons */
+        }
+
+        .confirm-back-button {
+            background-color: #294412;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            text-align: center; /* Center the text */
+        }
+
+        .confirm-back-button:hover {
+            background-color: #3e6623;
+        }
+        
+        button.confirm-button {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        button.back-button {
+            background-color: #294412;
+            color: white;
+            border: none;
+        }
+        
+        button.back-button:hover {
+            background-color: #3e6623;
+        }
+        
+        button.confirm-button {
+            background-color: #00C800;
+            color: white;
+            border: none;
+        }
+        
+        button.confirm-button:hover {
+            background-color: #00A800;
+        }
+
+        #dietary-back-button {
+            background-color: #294412;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #dietary-back-button:hover {
+            background-color: #3e6623;
+        }
+
+        #dietary-confirm-button {
+            background-color: #00c800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #dietary-confirm-button:hover {
+            background-color: #00a800;
+        }
+                
+
+        /* Help Modal (Call Waiter) *********/
+        .help-modal {
+            display: none; /* Hidden by default */
+            position: fixed; 
+            z-index: 9999; /* Ensure it's on top of everything else */
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(0,0,0,0.5); /* Semi-transparent overlay */
+        }
+
+        .help-content {
+            background-color: #f6eada;
+            margin: 10% auto; 
+            padding: 40px; 
+            border-radius: 10px;
+            width: 600px; 
+            height: 400px; 
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.2);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .help-content h2 {
+            font-size: 30px;
+            margin-bottom: 40px;
+            line-height: 1.5;
+        }
+
+        .help-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 70px;
+        }
+
+        .help-yes, .help-no {
+            border: none;
+            padding: 20px 40px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 40px;
+            width: 200px;
+            height: 130px;
+            text-align: center;
+        }
+
+        .help-yes {
+            background-color: #00c800;
+            color: #fff;
+        }
+
+        .help-no {
+            background-color: #294412;
+            color: #fff;
+        }
+
+        .help-yes:hover {
+            background-color: #00a800;
+        }
+
+        .help-no:hover {
+            background-color: #3e6623;
+        }
+
+
     </style>
 </head>
 <body>
+    <!-- **********************************8HTML STRUCTURING PAGE ****************************************************************************************** -->
     <!-- Top Navigation -->
     <div class="top-nav">
         <div class="nav-left">
-            <button class="nav-btn">History</button>
-            <button class="nav-btn">Help</button>
+            <button class="nav-btn" id="history-button">History</button>
+            <button class="nav-btn" id="help-button">Help</button>
         </div>
         <div class="nav-right">
             <button class="nav-btn">
-                <img src="images/language_icon.png" alt="Language Icon" class="language-icon">
+                <img src="assets/language_icon.png" alt="Language Icon" class="language-icon">
                 Language
             </button>
             <button class="nav-btn">Request Bill</button>
@@ -565,10 +922,6 @@
         <div class="menu-grid" id="menu-grid">
             <!-- Dynamic food items will appear here -->
         </div>
-        <div class="pagination">
-            <button>&larr;</button>
-            <button>&rarr;</button>
-        </div>
     </div>
 
     <!-- Cart Section -->
@@ -581,20 +934,30 @@
             <span>Total:</span>
             <span id="total-price">$0.00</span>
         </div>
-        <button class="order-btn" id="order-button">ORDER</button>
+        <button class="order-btn" id="order-button" disabled>ORDER</button>
     </div>
 
     <!-- Modal -->
     <div id="food-modal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
+        <div class="modal-content" style="position: relative;">
             <div class="food-modal-image-container">
                 <img id="modal-image" src="" alt="" class="food-photo">
-                <div id="modal-tags" class="food-tags-container"></div>
+                <div id="modal-tags" class="food-tags-container">
+                    ${item.tags.map(tag => `
+                        <div class="food-tag">
+                            <img src="${tag.icon}" alt="${tag.text}" class="tag-icon">
+                            <span>${tag.text}</span>
+                        </div>
+                    `).join('')}
+                </div>
                 <!-- Comments Section -->
                 <div class="comments-section">
                     <label for="comments">Substitutions/Comments:</label>
                     <textarea id="comments" placeholder="Type here..."></textarea>
+                </div>
+                <div class="food-modal-buttons">
+                    <button id="food-description-back-button" class="food-description-back-button">Back</button>
+                    <button id="add-to-cart-modal" class="add-to-cart-button">Add to Cart</button>
                 </div>
             </div>
             <div class="food-modal-details">
@@ -613,8 +976,6 @@
                     </div>
                 </div>
 
-                <!-- Add to Cart Button -->
-                <button id="add-to-cart-modal" class="add-to-cart-button">Add to Cart</button>
             </div>
         </div>
     </div>
@@ -632,162 +993,775 @@
                 <p>Tax: <span id="confirm-tax"></span></p>
                 <p>Total: <span id="confirm-total"></span></p>
             </div>
-            <button class="confirm-btn" id="confirm-order-button">CONFIRM ORDER</button>
+            <div class="confirm-order-buttons">
+                <button id="confirm-back-button" class="confirm-back-button">Back</button>
+                <button class="confirm-btn" id="confirm-order-button">CONFIRM ORDER</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Confirmed! Thank you Modal -->
+    <div id="success-modal" class="success-modal">
+        <div class="success-content">
+            <h2>Order Confirmed!</h2>
+            <p>Thank you for your order.</p>
+            <button class="close-success" id="close-success-button">OK</button>
+        </div>
+    </div>
+
+    <!-- Allergy Confirmation Modal -->
+    <div id="allergy-confirmation-modal" class="help-modal">
+        <div class="help-content">
+            <h2>Do you have any allergies or dietary restrictions?</h2>
+            <div class="help-buttons">
+                <button id="allergy-yes-button" class="help-yes">YES</button>
+                <button id="allergy-no-button" class="help-no">NO</button>
+            </div>
+            <div id="allergy-details" style="display: none; margin-top: 20px;">
+                <textarea id="allergy-comments" placeholder="Please specify your allergies or restrictions..." style="width: 100%; height: 80px;"></textarea>
+            </div>
+            <button id="allergy-confirm-button" class="confirm-btn" style="display: none; margin-top: 20px;">CONFIRM</button>
+        </div>
+    </div>
+    
+    <!-- Dietary Restrictions Modal -->
+    <div id="dietary-restrictions-modal">
+        <div class="dietary-restrictions-header">DIETARY RESTRICTIONS</div>
+        <div class="dietary-options">
+            <label class="dietary-option">
+                <input type="checkbox" id="vegan"> Vegan
+            </label>
+            <label class="dietary-option">
+                <input type="checkbox" id="vegetarian"> Vegetarian
+            </label>
+            <label class="dietary-option">
+                <input type="checkbox" id="dairy-free"> Dairy Free
+            </label>
+            <label class="dietary-option">
+                <input type="checkbox" id="gluten-free"> Gluten Free
+            </label>
+            <label class="dietary-option">
+                <input type="checkbox" id="shellfish-free"> Shellfish
+            </label>
+            <label class="dietary-option">
+                <input type="checkbox" id="nut-free"> Nut Free
+            </label>
+        </div>
+        <textarea id="dietary-comments" placeholder="Special instructions, preferences, or other allergies..."></textarea>
+        <div class="modal-buttons">
+            <button id="dietary-back-button" class="back-button">Back</button>
+            <button id="dietary-confirm-button" class="confirm-button">Confirm</button>
+            <!-- <button class="confirm-button">Confirm</button> -->
+        </div>
+    </div>
+    
+
+
+    <!-- Help Modal (Call Waiter) -->
+    <div id="call-waiter-modal" class="help-modal">
+        <div class="help-content">
+            <h2>Would you like to call the waiter to your table?</h2>
+            <div class="help-buttons">
+                <button id="help-yes-button" class="help-yes">YES</button>
+                <button id="help-no-button" class="help-no">NO</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order History Modal -->
+    <div id="order-history-modal" class="order-history-modal">
+        <div class="order-history-content">
+            <h2 class="order-history-header">Order History</h2>
+            <div id="order-history-items"></div>
         </div>
     </div>
 
     <script>
+
+    // INPUTING MENU DATA*************************************************************************
         const menuData = {
-            appetizers: [
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" },
-                { name: "Chicken Burger", price: 10.99, description: "A delicious chicken burger with fresh ingredients.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Spring Rolls", price: 7.99, description: "Crunchy spring rolls with dipping sauce.", tags: [], image: "assets/image.png" }
+    appetizers: [
+        {
+            name: "Chicken Wings",
+            price: 12.99,
+            description: "Juicy chicken wings served with your choice of sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            mains: [
-                { name: "Gold Burger", price: 17.99, description: "A heavy burger with gold foil and wedges on the side.", tags: ["Contains Nuts"], image: "assets/image.png" },
-                { name: "Fish Tacos", price: 16.99, description: "Crispy fish tacos with slaw, pico de gallo, and chipotle sauce.", tags: ["Contains Nuts"], image: "assets/image.png" }
+            image: "assets/chicken_wings.png"
+        },
+        {
+            name: "Bruschetta",
+            price: 8.99,
+            description: "Grilled bread topped with tomato, basil, and garlic.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            soups: [
-                { name: "Minestrone Soup", price: 9.99, description: "Classic minestrone with vegetables and beans.", tags: [], image: "assets/image.png" }
+            image: "assets/bruschetta.png"
+        },
+        {
+            name: "Stuffed Mushrooms",
+            price: 9.99,
+            description: "Mushrooms filled with a cheesy garlic herb stuffing.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            handhelds: [
-                { name: "Mozzarella Panini", price: 16.99, description: "Mozzarella and tomato panini with fresh basil and olive oil.<br><br>", tags: ["Vegetarian"], image: "assets/image.png" },
-                { name: "Beyond Burger", price: 19.99, description: "Gourmet Beyond Burger topped with vegan cheddar, caramelized onions on a toasted brioche bun.", tags: ["Vegetarian", "Contains Nuts"], image: "assets/image.png" }
+            image: "assets/stuffed_mushrooms.jpg"
+        },
+        {
+            name: "Garlic Bread",
+            price: 6.99,
+            description: "Toasted baguette with garlic butter and herbs.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            desserts: [
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" },
-                { name: "Chocolate Cake", price: 8.99, description: "Rich and decadent chocolate cake.", tags: [], image: "assets/image.png" }
+            image: "assets/garlic_bread.jpg"
+        },
+        {
+            name: "Spinach Dip",
+            price: 10.99,
+            description: "Creamy spinach dip served with tortilla chips.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
             ],
-            drinks: [
-                { name: "Lemonade0", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade2", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade3", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade4", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade5", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
-                { name: "Lemonade6", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" }
-            ]
-        };
+            image: "assets/spinach_dip.jpg"
+        },
+        {
+            name: "Calamari",
+            price: 13.99,
+            description: "Crispy calamari rings with marinara sauce.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/calamari.jpg"
+        },
+        {
+            name: "Nachos",
+            price: 11.99,
+            description: "Loaded nachos with cheese, jalapeños, and salsa.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/nachos.jpg"
+        },
+        {
+            name: "Shrimp Cocktail",
+            price: 14.99,
+            description: "Chilled shrimp served with tangy cocktail sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/shellfish_free.png", text: "Shellfish Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/shrimp_cocktail.jpg"
+        },
+        {
+            name: "Caprese Salad",
+            price: 9.99,
+            description: "Tomatoes, mozzarella, basil, and olive oil.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/caprese_salad.jpg"
+        }
+    ],
+    mains: [
+        {
+            name: "Steak and Fries",
+            price: 24.99,
+            description: "Grilled steak cooked to your liking with crispy fries.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/steak_fries.jpg"
+        },
+        {
+            name: "Grilled Salmon",
+            price: 21.99,
+            description: "Freshly grilled salmon served with steamed vegetables.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/grilled_salmon.jpg"
+        },
+        {
+            name: "Spaghetti Carbonara",
+            price: 18.99,
+            description: "Classic Italian pasta with creamy sauce and pancetta.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/spaghetti_carbonara.jpg"
+        },
+        {
+            name: "BBQ Ribs",
+            price: 25.99,
+            description: "Tender ribs glazed with house-made BBQ sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/bbq_ribs.jpg"
+        },
+        {
+            name: "Chicken Alfredo",
+            price: 19.99,
+            description: "Fettuccine pasta in creamy Alfredo sauce with grilled chicken.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/chicken_alfredo.jpg"
+        },
+        {
+            name: "Vegetable Stir-Fry",
+            price: 17.99,
+            description: "Stir-fried seasonal vegetables with soy-ginger sauce.",
+            tags: [
+                { icon: "assets/vegan.png", text: "Vegan" },
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/vegetable_stirfry.jpg"
+        },
+        {
+            name: "Lamb Chops",
+            price: 26.99,
+            description: "Grilled lamb chops with mint sauce.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/lamb_chops.jpg"
+        },
+        {
+            name: "Beef Tacos",
+            price: 18.99,
+            description: "Spiced beef tacos with fresh toppings.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/beef_tacos.jpg"
+        },
+        {
+            name: "Margherita Pizza",
+            price: 15.99,
+            description: "Classic pizza with tomato, mozzarella, and basil.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/margherita_pizza.jpg"
+        },
+        {
+            name: "Chicken Parmigiana",
+            price: 22.99,
+            description: "Crispy chicken cutlet with marinara and melted cheese.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/chicken_parmigiana.jpg"
+        },
+        {
+            name: "Seafood Paella",
+            price: 27.99,
+            description: "Traditional Spanish rice dish with seafood.",
+            tags: [
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/seafood_paella.jpg"
+        },
+        {
+            name: "Stuffed Bell Peppers",
+            price: 16.99,
+            description: "Bell peppers stuffed with rice, vegetables, and cheese.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/stuffed_bell_peppers.jpg"
+        }
+    ],
+    soups: [
+        {
+            name: "Tomato Basil Soup",
+            price: 7.99,
+            description: "Creamy tomato soup with a hint of basil.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/tomato_basil_soup.jpg"
+        },
+        {
+            name: "Chicken Noodle Soup",
+            price: 8.99,
+            description: "Hearty soup with chicken, noodles, and vegetables.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/chicken_noodle_soup.jpg"
+        },
+
+                {
+            name: "Clam Chowder",
+            price: 9.99,
+            description: "Rich and creamy soup with clams and potatoes.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/clam_chowder.jpg"
+        },
+        {
+            name: "French Onion Soup",
+            price: 8.99,
+            description: "Caramelized onions in a savory broth topped with melted cheese.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/french_onion_soup.jpg"
+        },
+        {
+            name: "Miso Soup",
+            price: 6.99,
+            description: "Traditional Japanese soup with tofu, seaweed, and scallions.",
+            tags: [
+                { icon: "assets/vegan.png", text: "Vegan" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/miso_soup.jpg"
+        },
+        {
+            name: "Lentil Soup",
+            price: 7.99,
+            description: "Hearty and flavorful soup made with lentils and spices.",
+            tags: [
+                { icon: "assets/vegan.png", text: "Vegan" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" }
+            ],
+            image: "assets/lentil_soup.jpg"
+        },
+        {
+            name: "Butternut Squash Soup",
+            price: 8.99,
+            description: "Creamy soup made with roasted butternut squash.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/gluten_free.png", text: "Gluten Free" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/butternut_squash_soup.jpg"
+        }
+    ],
+
+    handhelds: [
+        {
+            name: "Club Sandwich",
+            price: 14.99,
+            description: "Triple-layered sandwich with turkey, bacon, lettuce, and tomato.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/club_sandwich.jpeg"
+        },
+        {
+            name: "Veggie Wrap",
+            price: 13.99,
+            description: "Whole wheat wrap filled with fresh veggies and hummus.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/vegan.png", text: "Vegan" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/veggie_wrap.jpg"
+        },
+        {
+            name: "Pulled Pork Sandwich",
+            price: 15.99,
+            description: "Slow-cooked pulled pork with BBQ sauce on a brioche bun.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/pulled_pork_sandwich.jpg"
+        },
+        {
+            name: "Grilled Cheese",
+            price: 10.99,
+            description: "Classic grilled cheese sandwich with melted cheddar.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/grilled_cheese.jpg"
+        },
+        {
+            name: "BLT Sandwich",
+            price: 12.99,
+            description: "Crispy bacon, lettuce, and tomato on toasted bread.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/blt_sandwich.jpeg"
+        },
+        {
+            name: "Falafel Wrap",
+            price: 14.99,
+            description: "Pita wrap with falafel, tahini sauce, and fresh veggies.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" },
+                { icon: "assets/vegan.png", text: "Vegan" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/falafel_wrap.jpg"
+        },
+        {
+            name: "Turkey Panini",
+            price: 15.99,
+            description: "Panini with turkey, Swiss cheese, and cranberry sauce.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/turkey_panini.jpg"
+        },
+        {
+            name: "Cheeseburger",
+            price: 16.99,
+            description: "Classic cheeseburger with lettuce, tomato, and pickles.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/cheeseburger.jpg"
+        },
+        {
+            name: "BBQ Chicken Sandwich",
+            price: 14.99,
+            description: "Grilled chicken with BBQ sauce and coleslaw.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ // Adding sides
+                { name: "Fries", price: 0 },
+                { name: "Yam Fries", price: 2.50 },
+                { name: "House Salad", price: 0 },
+                { name: "Ceasar Salad", price: 2.50 }
+            ],
+            image: "assets/bbq_chicken_sandwich.jpg"
+        },
+        {
+            name: "Philly Cheesesteak",
+            price: 17.99,
+            description: "Thinly sliced steak with melted cheese and sautéed onions.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            sides: [ 
+                { name: "Ranch Dip", price: 0 },
+                { name: "Garlic Bread", price: 2.50 }
+            ],
+            image: "assets/philly_cheesesteak.jpg"
+        }
+    ],
+
+    desserts: [
+        {
+            name: "Cheesecake",
+            price: 9.99,
+            description: "Creamy cheesecake with a graham cracker crust.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/cheesecake.jpg"
+        },
+        {
+            name: "Ice Cream Sundae",
+            price: 7.99,
+            description: "Vanilla ice cream topped with chocolate sauce and whipped cream.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/ice_cream_sundae.jpg"
+        },
+        {
+            name: "Fruit Tart",
+            price: 8.99,
+            description: "Fresh fruit tart with a flaky pastry crust.",
+            tags: [
+                { icon: "assets/vegetarian.png", text: "Vegetarian" }
+            ],
+            image: "assets/fruit_tart.jpg"
+        },
+        {
+            name: "Brownie",
+            price: 6.99,
+            description: "Rich and fudgy chocolate brownie.",
+            tags: [
+                { icon: "assets/nut_free.png", text: "Nut Free" }
+            ],
+            image: "assets/brownie.jpg"
+        }
+    ],
+
+    drinks: [
+        { name: "Coke", price: 2.99, description: "Classic Coca-Cola.", tags: [], image: "assets/coke.png" },
+        { name: "Diet Coke", price: 2.99, description: "Sugar-free Coca-Cola.", tags: [], image: "assets/diet_coke.png" },
+        { name: "Sprite", price: 2.99, description: "Lemon-lime soda.", tags: [], image: "assets/sprite.png" },
+        { name: "Ginger Ale", price: 2.99, description: "Refreshing ginger-flavored soda.", tags: [], image: "assets/gingerale.png" },
+        { name: "Lemonade", price: 3.99, description: "Freshly squeezed lemonade.", tags: [], image: "assets/lemonade.png" },
+        { name: "Iced Tea", price: 3.99, description: "Chilled black tea with a hint of lemon.", tags: [], image: "assets/ice_tea.png" }
+    ]
+};
+// FUNCTION IMPLIMENTATIONS **********************************************************************************
+        let orderHistory = [];
 
         // Update menu items dynamically
-        function updateMenu(tab) {
-            const menuGrid = document.getElementById("menu-grid");
-            menuGrid.innerHTML = '';
+    function updateMenu(tab) {
+    const menuGrid = document.getElementById("menu-grid");
+    menuGrid.innerHTML = '';
 
-            menuData[tab].forEach(item => {
-                const itemElement = document.createElement("div");
-                itemElement.classList.add("menu-item");
-                itemElement.innerHTML = `
-                     <img src="${item.image}" alt="${item.name}" class="item-img">
-                    <h3 class="item-title">${item.name}</h3>
-                    <p class="item-desc">${item.description}</p>
-                    <div class="price-and-tags">
-                        <p class="price">$${item.price}</p>
-                        <div class="tags">${item.tags.map(tag => `<span class="tag">${tag === 'Contains Nuts' ? 'N' : tag === 'Vegetarian' ? 'V' : tag}</span>`).join('')}</div>
+        menuData[tab].forEach(item => {
+            const itemElement = document.createElement("div");
+            itemElement.classList.add("menu-item");
+            itemElement.innerHTML = `
+                <img src="${item.image}" alt="${item.name}" class="item-img">
+                <h3 class="item-title">${item.name}</h3>
+                <p class="item-desc">${item.description}</p>
+                <div class="price-and-tags">
+                    <p class="price">$${item.price}</p>
+                    <div class="tags">
+                        ${item.tags.map(tag => `<img src="${tag.icon}" alt="${tag.text}" class="tag-icon">`).join('')}
                     </div>
-                `;
-                itemElement.onclick = () => openModal(item);
-                menuGrid.appendChild(itemElement);
-            });
-        }
+                </div>
+            `;
+            itemElement.onclick = () => openModal(item);
+            menuGrid.appendChild(itemElement);
+        });
+    }
+    // food description back button
+    document.getElementById("food-description-back-button").addEventListener("click", () => {
+        document.getElementById("food-modal").style.display = "none"; // Close the modal
+    });
+
+    //confirm order Back button
+    document.getElementById("confirm-back-button").addEventListener("click", () => {
+        document.getElementById("confirm-order-modal").style.display = "none";
+        // Add any additional logic to reset or navigate as needed
+    });
 
         // Modal functions
         function openModal(item) {
+            // Set modal image, title, description, and price
             document.getElementById("modal-image").src = item.image;
             document.getElementById("modal-title").textContent = item.name;
             document.getElementById("modal-desc").textContent = item.description;
             document.getElementById("modal-price").textContent = `$${item.price.toFixed(2)}`;
+        
+            // Render tags with circular icons
             const tagsContainer = document.getElementById("modal-tags");
-            tagsContainer.style.display = item.tags.length > 0 ? "flex" : "none";
-            tagsContainer.innerHTML = item.tags.map(tag => `<span class='food-tag'>${tag}</span>`).join('');
-            document.getElementById("food-modal").style.display = "block";
-
+            tagsContainer.innerHTML = item.tags
+                .map(tag => `
+                    <div class="food-tag">
+                        <img src="${tag.icon}" alt="${tag.text}" class="tag-icon">
+                        <span>${tag.text}</span>
+                    </div>
+                `)
+                .join('');
+        
+            // Dynamically populate sides if available
+            const sidesContainer = document.querySelector(".sides-options");
+            const sidesSection = document.querySelector(".sides-section");
+            if (item.sides && item.sides.length > 0) {
+                sidesSection.style.display = "block"; // Show the sides section
+                sidesContainer.innerHTML = item.sides
+                    .map(side => `
+                        <label class="side-option">
+                            <input type="radio" name="sides" value="${side.name}" data-price="${side.price}">
+                            ${side.name} ${side.price > 0 ? `+ $${side.price.toFixed(2)}` : ""}
+                        </label>
+                    `)
+                    .join('');
+                // Automatically select the first side option
+                sidesContainer.querySelector('input[name="sides"]').checked = true;
+            } else {
+                sidesSection.style.display = "none"; // Hide the sides section
+                sidesContainer.innerHTML = ''; // Clear any previous sides
+            }
+        
+            // Reset comments
+            document.getElementById("comments").value = "";
+        
+            // Attach event to "Add to Cart" button
             document.getElementById("add-to-cart-modal").onclick = () => {
-                const selectedSide = document.querySelector('input[name="sides"]:checked').value;
+                const selectedSideElement = document.querySelector('input[name="sides"]:checked');
+                const selectedSide = selectedSideElement ? selectedSideElement.value : null;
+                const sidePrice = selectedSideElement ? parseFloat(selectedSideElement.dataset.price) : 0;
                 const comments = document.getElementById("comments").value;
-                addToCart(item, selectedSide, comments);
+                addToCart(item, selectedSide, sidePrice, comments);
                 closeModal();
             };
-
-            // Reset comments and sides selection when opening modal
-            document.getElementById("comments").value = "";
-            document.querySelector('input[name="sides"][value="Fries"]').checked = true;
-
-            // Close modal without adding to cart
+        
+            // Show the modal
+            document.getElementById("food-modal").style.display = "block";
+        
+            // Attach close functionality
             document.querySelector('.close').onclick = () => closeModal();
         }
+        
+    //end help functions
 
-        function closeModal() {
-            document.getElementById("food-modal").style.display = "none";
-        }
+    function closeModal() {
+        document.getElementById("food-modal").style.display = "none";
+    }
 
         // Cart functions
         let cart = [];
-        function addToCart(item, side, comments) {
-            const cartItem = cart.find(cartItem => cartItem.name === item.name && cartItem.side === side && cartItem.comments === comments);
+        function addToCart(item, side = "No Side", sidePrice = 0, comments = "") {
+            const cartItem = cart.find(cartItem =>
+                cartItem.name === item.name &&
+                cartItem.side === side &&
+                cartItem.comments === comments
+            );
+        
             if (cartItem) {
                 cartItem.quantity++;
             } else {
-                cart.push({ ...item, quantity: 1, side, comments });
+                cart.push({
+                    ...item,
+                    quantity: 1,
+                    side: side || "No Side", // Default to "No Side" if undefined
+                    sidePrice: sidePrice || 0, // Default to 0 if undefined
+                    comments: comments || "", // Default to an empty string if undefined
+                });
             }
-            updateCart();
+            updateCart(); // Refresh the cart UI
         }
+        
 
         function updateCart() {
             const cartItemsContainer = document.querySelector('.cart-items');
-            const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+            const totalPrice = cart.reduce((total, item) =>
+                total + (item.price + (item.sidePrice || 0)) * item.quantity, 0
+            );
+        
             document.getElementById("total-price").textContent = `$${totalPrice.toFixed(2)}`;
+        
             cartItemsContainer.innerHTML = cart.map(item => `
                 <div class="cart-item">
                     <div class="cart-item-header">
-                        ${item.name} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}
+                        ${item.name} x ${item.quantity} - $${((item.price + (item.sidePrice || 0)) * item.quantity).toFixed(2)}
                         <div class="quantity-controls">
-                            <button class="decrease" data-item="${item.name}" data-side="${item.side}" data-comments="${item.comments}">-</button>
+                            <button class="decrease" data-item="${item.name}" data-side="${item.side || "No Side"}" data-comments="${item.comments}">-</button>
                             <span class="quantity">${item.quantity}</span>
-                            <button class="increase" data-item="${item.name}" data-side="${item.side}" data-comments="${item.comments}">+</button>
+                            <button class="increase" data-item="${item.name}" data-side="${item.side || "No Side"}" data-comments="${item.comments}">+</button>
                         </div>
-                        <button class="remove-btn" data-item="${item.name}" data-side="${item.side}" data-comments="${item.comments}">🗑️</button>
+                        <button class="remove-btn" data-item="${item.name}" data-side="${item.side || "No Side"}" data-comments="${item.comments}">🗑️</button>
                     </div>
                     <div class="cart-item-details">
-                        <p><strong>Side:</strong> ${item.side}</p>
+                        <p><strong>Side:</strong> ${item.side || "No Side"} ${item.sidePrice > 0 ? `+ $${item.sidePrice.toFixed(2)}` : ''}</p>
                         ${item.comments ? `<p><strong>Comments:</strong> ${item.comments}</p>` : ''}
                     </div>
                 </div>
             `).join('');
+        
+            // Enable or disable the order button based on cart content
+            document.getElementById("order-button").disabled = cart.length === 0;
         }
+        
+        
 
         // Event listeners for increase, decrease, and remove buttons
         document.querySelector(".cart-items").addEventListener("click", (event) => {
             const button = event.target;
-
-            if (button.classList.contains("increase") || button.classList.contains("decrease")) {
-                const itemName = button.getAttribute("data-item");
-                const itemSide = button.getAttribute("data-side");
-                const itemComments = button.getAttribute("data-comments");
-                const cartItem = cart.find(item => item.name === itemName && item.side === itemSide && item.comments === itemComments);
-
+        
+            // Extract necessary attributes from the clicked button
+            const itemName = button.getAttribute("data-item");
+            const itemSide = button.getAttribute("data-side") || "No Side"; // Default to "No Side"
+            const itemComments = button.getAttribute("data-comments") || ""; // Default to empty string
+        
+            // Find the item in the cart
+            const cartItem = cart.find(item =>
+                item.name === itemName &&
+                item.side === itemSide &&
+                item.comments === itemComments
+            );
+        
+            if (cartItem) {
                 if (button.classList.contains("increase")) {
                     cartItem.quantity++;
-                } else if (button.classList.contains("decrease") && cartItem.quantity > 1) {
-                    cartItem.quantity--;
+                } else if (button.classList.contains("decrease")) {
+                    if (cartItem.quantity > 1) {
+                        cartItem.quantity--;
+                    }
+                } else if (button.classList.contains("remove-btn")) {
+                    // Remove the item from the cart
+                    cart = cart.filter(item =>
+                        !(item.name === itemName && item.side === itemSide && item.comments === itemComments)
+                    );
                 }
-
-                updateCart();
-            }
-
-            // Remove item from cart
-            if (button.classList.contains("remove-btn")) {
-                const itemName = button.getAttribute("data-item");
-                const itemSide = button.getAttribute("data-side");
-                const itemComments = button.getAttribute("data-comments");
-                cart = cart.filter(item => !(item.name === itemName && item.side === itemSide && item.comments === itemComments));
-                updateCart();
+                updateCart(); // Refresh the cart UI
             }
         });
+        
 
         // Order Button Event Listener
         document.getElementById("order-button").addEventListener("click", () => {
@@ -800,34 +1774,95 @@
             confirmOrderItemsContainer.innerHTML = cart.map(item => `
                 <div class="confirm-order-item">
                     <span>${item.name} x ${item.quantity}</span>
-                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>$${((item.price + item.sidePrice) * item.quantity).toFixed(2)}</span>
                     <div class="confirm-order-details">
-                        <p>Side: ${item.side}</p>
+                        <p>Side: ${item.side} ${item.sidePrice > 0 ? `+ $${item.sidePrice.toFixed(2)}` : ''}</p>
                         ${item.comments ? `<p>Comments: ${item.comments}</p>` : ''}
                     </div>
                 </div>
             `).join('');
-
-            const subtotal = cart.reduce((total, item) => total + item.price * item.quantity, 0);
+        
+            const subtotal = cart.reduce((total, item) =>
+                total + (item.price + item.sidePrice) * item.quantity, 0
+            );
             const tax = subtotal * 0.1; // Assuming 10% tax
             const total = subtotal + tax;
-
+        
             document.getElementById("confirm-subtotal").textContent = `$${subtotal.toFixed(2)}`;
             document.getElementById("confirm-tax").textContent = `$${tax.toFixed(2)}`;
             document.getElementById("confirm-total").textContent = `$${total.toFixed(2)}`;
-
+        
             document.getElementById("confirm-order-modal").style.display = "block";
         }
+        
 
         document.getElementById("confirm-order-button").addEventListener("click", () => {
-            alert("Order confirmed! Thank you.");
+            const subtotal = parseFloat(document.getElementById("confirm-subtotal").textContent.replace('$', ''));
+            const tax = parseFloat(document.getElementById("confirm-tax").textContent.replace('$', ''));
+            const total = parseFloat(document.getElementById("confirm-total").textContent.replace('$', ''));
+            const order = {
+                items: [...cart],
+                subtotal,
+                tax,
+                total,
+                comments: document.getElementById("order-comments").value
+            };
+            orderHistory.push(order);
+
+            // Show the success modal instead of the alert:
+          
             cart = [];
             updateCart();
             closeConfirmOrderModal();
         });
 
+
+        document.getElementById("close-success-button").addEventListener("click", () => {
+            document.getElementById("success-modal").style.display = "none";
+        });
+
         function closeConfirmOrderModal() {
             document.getElementById("confirm-order-modal").style.display = "none";
+        }
+
+        // History Button Event Listener
+        document.getElementById("history-button").addEventListener("click", () => {
+            openOrderHistoryModal();
+        });
+
+        function openOrderHistoryModal() {
+            const orderHistoryItemsContainer = document.getElementById("order-history-items");
+            orderHistoryItemsContainer.innerHTML = orderHistory.map((order, index) => `
+                <div class="order-history-item">
+                    <h3>Order #${index + 1}</h3>
+                    <div>
+                        ${order.items.map(item => `
+                            <div>
+                                ${item.name} x ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}
+                                <div>Side: ${item.side}</div>
+                                ${item.comments ? `<div>Comments: ${item.comments}</div>` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p><strong>Subtotal:</strong> $${order.subtotal.toFixed(2)}</p>
+                    <p><strong>Tax:</strong> $${order.tax.toFixed(2)}</p>
+                    <p><strong>Total:</strong> $${order.total.toFixed(2)}</p>
+                    ${order.comments ? `<p><strong>Order Comments:</strong> ${order.comments}</p>` : ''}
+                </div>
+            `).join('');
+            document.getElementById("order-history-modal").style.display = "block";
+        }
+        
+        
+
+        document.querySelector(".order-history-modal").addEventListener("click", (event) => {
+            if (event.target.classList.contains("order-history-modal")) {
+                closeOrderHistoryModal();
+            }
+        });
+
+        function closeOrderHistoryModal() {
+            document.getElementById("order-history-modal").style.display = "none";
         }
 
         // Tab selection functionality
@@ -841,6 +1876,175 @@
 
         // Initialize menu
         updateMenu("appetizers");
+
+
+// List of tab names in the order they appear
+const tabs = ["appetizers", "mains", "soups", "handhelds", "desserts", "drinks"];
+
+// Function to switch the active tab and update the menu
+function switchTab(direction) {
+    const activeTab = document.querySelector(".menu-tab.active");
+    const activeTabName = activeTab.dataset.tab;
+
+    // Find the index of the active tab in the `tabs` array
+    const currentIndex = tabs.indexOf(activeTabName);
+
+    // Determine the next index based on the direction
+    let nextIndex;
+    if (direction === "left") {
+        nextIndex = currentIndex === 0 ? tabs.length - 1 : currentIndex - 1; // Wrap around to the last tab
+    } else if (direction === "right") {
+        nextIndex = currentIndex === tabs.length - 1 ? 0 : currentIndex + 1; // Wrap around to the first tab
+    }
+
+    // Update the active tab
+    document.querySelectorAll(".menu-tab").forEach(tab => tab.classList.remove("active"));
+    const nextTab = document.querySelector(`.menu-tab[data-tab="${tabs[nextIndex]}"]`);
+    nextTab.classList.add("active");
+
+    // Update the menu items
+    updateMenu(tabs[nextIndex]);
+}
+
+function openAllergyModal() {
+    const allergyModal = document.getElementById("allergy-confirmation-modal");
+    const dietaryModal = document.getElementById("dietary-restrictions-modal");
+
+    allergyModal.style.display = "block";
+
+    document.getElementById("allergy-yes-button").onclick = () => {
+        allergyModal.style.display = "none";
+        dietaryModal.style.display = "block";
+    };
+
+    document.getElementById("allergy-no-button").onclick = () => {
+        allergyModal.style.display = "none";
+        //finalizeOrder();
+    };
+
+    document.querySelector(".confirm-button").onclick = () => {
+        const restrictions = [];
+        if (document.getElementById("vegan").checked) restrictions.push("Vegan");
+        if (document.getElementById("vegetarian").checked) restrictions.push("Vegetarian");
+        if (document.getElementById("dairy-free").checked) restrictions.push("Dairy Free");
+        if (document.getElementById("gluten-free").checked) restrictions.push("Gluten Free");
+        if (document.getElementById("shellfish-free").checked) restrictions.push("Shellfish Free");
+        if (document.getElementById("nut-free").checked) restrictions.push("Nut Free");
+
+        const comments = document.getElementById("dietary-comments").value;
+
+        // Save dietary restrictions to the global object
+        window.currentOrderRestrictions = {
+            restrictions,
+            comments,
+        };
+
+        dietaryModal.style.display = "none";
+        finalizeOrder();
+    };
+}
+
+// Add event listener for the dietary back button
+document.getElementById("dietary-back-button").addEventListener("click", () => {
+    document.getElementById("dietary-restrictions-modal").style.display = "none"; // Close the dietary modal
+    document.getElementById("allergy-confirmation-modal").style.display = "block"; // Optionally go back to the allergy modal
+});
+
+// Add functionality for the confirm button
+document.getElementById("dietary-confirm-button").addEventListener("click", () => {
+    const restrictions = [];
+    if (document.getElementById("vegan").checked) restrictions.push("Vegan");
+    if (document.getElementById("vegetarian").checked) restrictions.push("Vegetarian");
+    if (document.getElementById("dairy-free").checked) restrictions.push("Dairy Free");
+    if (document.getElementById("gluten-free").checked) restrictions.push("Gluten Free");
+    if (document.getElementById("shellfish-free").checked) restrictions.push("Shellfish Free");
+    if (document.getElementById("nut-free").checked) restrictions.push("Nut Free");
+
+    const comments = document.getElementById("dietary-comments").value;
+
+    // Proceed to finalize order or handle the restrictions as needed
+});
+
+
+// Attach the corrected event listeners to the confirm order button
+document.getElementById("confirm-order-button").addEventListener("click", () => {
+    openAllergyModal();
+});
+
+// Finalize Order Logic
+// Finalize Order Logic
+function finalizeOrder() {
+    const subtotal = parseFloat(document.getElementById("confirm-subtotal").textContent.replace('$', ''));
+    const tax = parseFloat(document.getElementById("confirm-tax").textContent.replace('$', ''));
+    const total = parseFloat(document.getElementById("confirm-total").textContent.replace('$', ''));
+
+    const order = {
+        items: [...cart],
+        subtotal,
+        tax,
+        total,
+        comments: document.getElementById("order-comments").value || "", // Order-level comments
+        allergies: window.currentOrderRestrictions || null, // Include dietary restrictions if any
+    };
+
+    // Push the finalized order to history
+    //orderHistory.push(order);
+
+    // Clear cart and dietary restriction data
+    cart = [];
+    window.currentOrderRestrictions = null; // Reset dietary restrictions
+    updateCart();
+
+    // Show success modal
+    document.getElementById("success-modal").style.display = "block";
+
+    console.log("Order finalized:", order);
+}
+
+
+
+
+
+
+// Add logic to close the dietary restrictions modal
+document.getElementById("back-to-allergy-modal").onclick = () => {
+    document.getElementById("dietary-restrictions-modal").style.display = "none";
+    document.getElementById("allergy-confirmation-modal").style.display = "block";
+};
+
+// Confirm dietary restrictions and finalize the order
+document.getElementById("confirm-dietary").onclick = () => {
+    const restrictions = [];
+    if (document.getElementById("vegan").checked) restrictions.push("Vegan");
+    if (document.getElementById("vegetarian").checked) restrictions.push("Vegetarian");
+    if (document.getElementById("dairy-free").checked) restrictions.push("Dairy Free");
+    if (document.getElementById("gluten-free").checked) restrictions.push("Gluten Free");
+    if (document.getElementById("shellfish-free").checked) restrictions.push("Shellfish Free");
+    if (document.getElementById("nut-free").checked) restrictions.push("Nut Free");
+
+    const comments = document.getElementById("dietary-comments").value;
+    alert(`Dietary Restrictions: ${restrictions.join(", ")}\nComments: ${comments}`);
+    document.getElementById("dietary-restrictions-modal").style.display = "none";
+
+    //finalizeOrder();
+};
+
+
+// Add event listeners for Help Modal
+        document.getElementById("help-button").addEventListener("click", () => {
+            document.getElementById("call-waiter-modal").style.display = "block";
+        });
+
+        document.getElementById("help-yes-button").addEventListener("click", () => {
+            alert("The waiter has been called to your table.");
+            document.getElementById("call-waiter-modal").style.display = "none";
+        });
+
+        document.getElementById("help-no-button").addEventListener("click", () => {
+            document.getElementById("call-waiter-modal").style.display = "none";
+        });
+
+//************************************************
     </script>
 </body>
 </html>
